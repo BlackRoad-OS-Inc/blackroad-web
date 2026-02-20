@@ -1,35 +1,44 @@
-# blackroad-web
+# @blackroad/web
 
-Frontend interface and web platform for BlackRoad OS.
+Next.js 15 dashboard for BlackRoad OS. Displays agents, metrics, and system status.
 
 ## Quick Start
 
 ```bash
 npm install
-npm run dev       # Development server
-npm run build     # Production build
-npm start         # Production server
-npm run lint      # ESLint
+npm run dev       # http://localhost:3000
 ```
 
-## Tech Stack
+## Development
 
-- Next.js 15 + React 19
-- TypeScript
-- BlackRoad Brand System (Golden Ratio spacing, brand gradient)
+```bash
+npm run typecheck  # Type-check
+npm test           # Run tests
+npm run build      # Production build
+npm run format     # Prettier
+```
 
-## Endpoints
+## Structure
 
-| Method | Path | Description |
-|--------|------|-------------|
-| GET | `/api/health` | Health check |
+```
+src/
+  app/              # Next.js App Router pages
+  components/
+    ui/             # Button, Card, Badge
+    layout/         # Header, Sidebar
+    agents/         # Agent cards and grid
+    metrics/        # Metric displays
+  lib/              # API client, utilities, brand constants
+  hooks/            # useAgents, useMetrics, useWebSocket
+  stores/           # Zustand (agent-store, ui-store)
+test/               # Vitest test suites
+```
 
-## Deployment
+## Brand System
 
-Deploys to Railway on push to `main`. See `railway.toml` for config.
-
-Uses `output: 'standalone'` for optimized container builds.
+- Hot Pink `#FF1D6C`, Amber `#F5A623`, Violet `#9C27B0`, Electric Blue `#2979FF`
+- Golden Ratio spacing: 8, 13, 21, 34, 55, 89, 144px
 
 ## License
 
-Proprietary - BlackRoad OS, Inc. All rights reserved.
+Copyright (c) 2025-2026 BlackRoad OS, Inc. All Rights Reserved.

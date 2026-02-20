@@ -1,8 +1,10 @@
+// Copyright (c) 2025-2026 BlackRoad OS, Inc. All Rights Reserved.
 import type { Metadata } from 'next'
+import './globals.css'
 
 export const metadata: Metadata = {
   title: 'BlackRoad OS',
-  description: 'Your AI. Your Hardware. Your Rules.',
+  description: 'AI Agent Orchestration Platform',
 }
 
 export default function RootLayout({
@@ -12,15 +14,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body style={{
-        margin: 0,
-        backgroundColor: '#000000',
-        color: '#FFFFFF',
-        fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif',
-        lineHeight: 1.618,
-      }}>
-        {children}
-      </body>
+      <body>{children}</body>
     </html>
   )
 }
