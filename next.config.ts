@@ -2,7 +2,12 @@
 import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
-  output: 'standalone',
+  output: 'export',
+  images: { unoptimized: true },
+  poweredByHeader: false,
+  reactStrictMode: true,
+  eslint: { ignoreDuringBuilds: true },
+  outputFileTracingRoot: __dirname,
 }
 
 export default nextConfig

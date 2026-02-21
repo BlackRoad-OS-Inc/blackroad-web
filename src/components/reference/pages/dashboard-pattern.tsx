@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { FloatingShapes, GeometricPattern, BlackRoadSymbol } from '../components/BlackRoadVisuals'
+import { FloatingShapes, GeometricPattern, BlackRoadSymbol } from '@/components/BlackRoadVisuals'
 
 interface ServiceStatus {
   service: string

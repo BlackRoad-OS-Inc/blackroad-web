@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { GeometricPattern } from '../../components/BlackRoadVisuals'
+import { GeometricPattern } from '@/components/BlackRoadVisuals'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {

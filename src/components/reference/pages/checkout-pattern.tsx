@@ -2,7 +2,7 @@
 
 import { useSearchParams, useRouter } from 'next/navigation'
 import { useState, Suspense } from 'react'
-import { FloatingShapes, GeometricPattern, BlackRoadSymbol } from '../components/BlackRoadVisuals'
+import { FloatingShapes, GeometricPattern, BlackRoadSymbol } from '@/components/BlackRoadVisuals'
 
 const PLANS: Record<string, { name: string; price: string; features: string[] }> = {
   professional: {

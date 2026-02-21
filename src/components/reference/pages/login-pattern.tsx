@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { FloatingShapes, GeometricPattern, BlackRoadSymbol, StatusEmoji } from '../components/BlackRoadVisuals'
+import { FloatingShapes, GeometricPattern, BlackRoadSymbol, StatusEmoji } from '@/components/BlackRoadVisuals'
 
 export default function Login2Page() {
   const [email, setEmail] = useState('')

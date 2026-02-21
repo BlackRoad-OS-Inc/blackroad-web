@@ -2,6 +2,12 @@
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 
+const agents = ['alice', 'aria', 'cecilia', 'lucidia', 'octavia', 'shellfish']
+
+export function generateStaticParams() {
+  return agents.map((name) => ({ name }))
+}
+
 export default async function AgentDetailPage({
   params,
 }: {

@@ -1,4 +1,4 @@
-import { StatusEmoji, MetricEmoji } from '../components/BlackRoadVisuals'
+import { StatusEmoji, MetricEmoji } from '@/components/BlackRoadVisuals'
 import Link from 'next/link'
 
 import type { Metadata } from 'next'

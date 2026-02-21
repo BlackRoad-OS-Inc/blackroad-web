@@ -1,4 +1,4 @@
-import { ScanLine, MetricEmoji, PulsingDot, CommandPrompt } from '../components/BlackRoadVisuals'
+import { ScanLine, MetricEmoji, PulsingDot, CommandPrompt } from '@/components/BlackRoadVisuals'
 
 import type { Metadata } from 'next'
 

@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { FloatingShapes, GeometricPattern, BlackRoadSymbol } from '../components/BlackRoadVisuals'
+import { FloatingShapes, GeometricPattern, BlackRoadSymbol } from '@/components/BlackRoadVisuals'
 
 function UsageBar({ label, used, total, unit = '' }: { label: string; used: number; total: number; unit?: string }) {
   const percentage = (used / total) * 100

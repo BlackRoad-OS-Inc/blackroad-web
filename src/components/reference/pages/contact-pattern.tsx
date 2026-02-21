@@ -1,6 +1,6 @@
 'use client'
 
-import { StatusEmoji, CommandPrompt } from '../components/BlackRoadVisuals'
+import { StatusEmoji, CommandPrompt } from '@/components/BlackRoadVisuals'
 import { useState } from 'react'
 
 export default function ContactPage() {

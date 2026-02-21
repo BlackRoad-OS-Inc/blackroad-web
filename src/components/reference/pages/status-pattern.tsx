@@ -5,7 +5,7 @@ import {
   StatusEmoji,
   BlackRoadSymbol,
   PulsingDot
-} from '../components/BlackRoadVisuals'
+} from '@/components/BlackRoadVisuals'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {

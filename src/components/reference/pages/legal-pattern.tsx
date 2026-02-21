@@ -3,7 +3,7 @@ import {
   AnimatedGrid,
   ScanLine,
   BlackRoadSymbol
-} from '../components/BlackRoadVisuals'
+} from '@/components/BlackRoadVisuals'
 import Link from 'next/link'
 
 import type { Metadata } from 'next'

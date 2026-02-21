@@ -1,4 +1,4 @@
-import { CommandPrompt, StatusEmoji, MetricEmoji } from '../components/BlackRoadVisuals'
+import { CommandPrompt, StatusEmoji, MetricEmoji } from '@/components/BlackRoadVisuals'
 
 import type { Metadata } from 'next'
 

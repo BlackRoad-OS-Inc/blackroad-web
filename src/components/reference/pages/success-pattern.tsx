@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { FloatingShapes, GeometricPattern, BlackRoadSymbol } from '../components/BlackRoadVisuals'
+import { FloatingShapes, GeometricPattern, BlackRoadSymbol } from '@/components/BlackRoadVisuals'
 
 export default function SuccessPage() {
   return (

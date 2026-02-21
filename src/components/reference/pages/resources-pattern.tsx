@@ -1,4 +1,4 @@
-import { FloatingShapes, StatusEmoji, MetricEmoji, GeometricPattern, BlackRoadSymbol } from '../components/BlackRoadVisuals'
+import { FloatingShapes, StatusEmoji, MetricEmoji, GeometricPattern, BlackRoadSymbol } from '@/components/BlackRoadVisuals'
 
 import type { Metadata } from 'next'
 
