@@ -1,0 +1,1433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROAD Protocol - Revenue-Backed Digital Currency</title>
+    <meta name="description" content="ROAD is a revenue-backed digital currency pegged 1:1 to Bitcoin. Backed by real infrastructure, cryptographically verified, with on-chain proof of reserve.">
+    <meta property="og:title" content="ROAD Protocol - 1 ROAD = 1 BTC">
+    <meta property="og:description" content="Revenue-backed digital currency with cryptographic proof of peg and on-chain BTC reserve verification.">
+    <meta property="og:type" content="website">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>R</text></svg>">
+    <style>
+        :root {
+            --black: #000000;
+            --bg: #0a0a0a;
+            --bg-card: #111111;
+            --bg-card-hover: #161616;
+            --border: rgba(255,255,255,0.08);
+            --border-accent: rgba(255,29,108,0.2);
+            --white: #FFFFFF;
+            --text-primary: #f0f0f0;
+            --text-secondary: rgba(255,255,255,0.55);
+            --text-tertiary: rgba(255,255,255,0.35);
+            --amber: #F5A623;
+            --hot-pink: #FF1D6C;
+            --electric-blue: #2979FF;
+            --violet: #9C27B0;
+            --green: #00E676;
+            --red: #FF1744;
+            --space-xs: 8px;
+            --space-sm: 13px;
+            --space-md: 21px;
+            --space-lg: 34px;
+            --space-xl: 55px;
+            --space-2xl: 89px;
+            --space-3xl: 144px;
+            --radius: 12px;
+            --radius-lg: 16px;
+            --ease: cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: var(--bg);
+            color: var(--text-primary);
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', system-ui, sans-serif;
+            line-height: 1.618;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        code, .mono {
+            font-family: 'SF Mono', 'Fira Code', 'JetBrains Mono', monospace;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        @keyframes fade-in {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Nav */
+        nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            background: rgba(10,10,10,0.92);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            padding: var(--space-sm) var(--space-xl);
+            z-index: 1000;
+            border-bottom: 1px solid var(--border);
+        }
+
+        nav .nav-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--white);
+        }
+
+        .logo-dot {
+            display: inline-block;
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: var(--hot-pink);
+            margin-left: 2px;
+            vertical-align: super;
+        }
+
+        .protocol-version {
+            font-size: 11px;
+            color: var(--text-tertiary);
+            font-weight: 600;
+            padding: 2px 8px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: var(--space-lg);
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            transition: color 0.2s var(--ease);
+        }
+
+        .nav-links a:hover { color: var(--white); }
+
+        .nav-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--green);
+            font-weight: 600;
+        }
+
+        .status-dot {
+            width: 7px; height: 7px;
+            border-radius: 50%;
+            background: var(--green);
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--space-xl);
+        }
+
+        /* Hero */
+        .hero {
+            padding: calc(var(--space-3xl) + 40px) 0 var(--space-2xl);
+            text-align: center;
+            animation: fade-in 0.6s var(--ease);
+        }
+
+        .peg-declaration {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: var(--space-xs) var(--space-md);
+            background: rgba(255,29,108,0.06);
+            border: 1px solid rgba(255,29,108,0.15);
+            border-radius: 100px;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--hot-pink);
+            margin-bottom: var(--space-lg);
+        }
+
+        .peg-declaration .peg-icon {
+            width: 18px; height: 18px;
+            background: var(--hot-pink);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 10px;
+            font-weight: 900;
+        }
+
+        .hero h1 {
+            font-size: 56px;
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -2px;
+            margin-bottom: var(--space-md);
+        }
+
+        .hero h1 .accent {
+            background: linear-gradient(135deg, var(--amber) 0%, var(--hot-pink) 50%, var(--violet) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-sub {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 640px;
+            margin: 0 auto;
+            font-weight: 400;
+        }
+
+        /* Ticker Bar */
+        .ticker-bar {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-xl);
+            padding: var(--space-md) 0;
+            margin-top: var(--space-lg);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            flex-wrap: wrap;
+        }
+
+        .ticker-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+            font-size: 13px;
+        }
+
+        .ticker-label {
+            color: var(--text-tertiary);
+            font-weight: 500;
+        }
+
+        .ticker-value {
+            font-weight: 700;
+            font-family: 'SF Mono', monospace;
+        }
+
+        .ticker-value.green { color: var(--green); }
+        .ticker-value.amber { color: var(--amber); }
+        .ticker-value.pink { color: var(--hot-pink); }
+
+        /* Main Balance */
+        .balance-section {
+            margin: var(--space-xl) 0;
+        }
+
+        .balance-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            text-align: center;
+        }
+
+        .balance-eyebrow {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 700;
+            margin-bottom: var(--space-sm);
+        }
+
+        .balance-amount {
+            font-size: 64px;
+            font-weight: 800;
+            letter-spacing: -2px;
+            line-height: 1.1;
+            color: var(--white);
+        }
+
+        .balance-amount .currency {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            letter-spacing: 0;
+        }
+
+        .balance-usd {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--green);
+            margin-top: var(--space-xs);
+            letter-spacing: -0.5px;
+        }
+
+        .balance-usd-note {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            margin-top: 2px;
+        }
+
+        .balance-metrics {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--space-md);
+            margin-top: var(--space-lg);
+            padding-top: var(--space-lg);
+            border-top: 1px solid var(--border);
+        }
+
+        .bm-item {
+            text-align: center;
+        }
+
+        .bm-value {
+            font-size: 22px;
+            font-weight: 700;
+            font-family: 'SF Mono', monospace;
+            color: var(--white);
+        }
+
+        .bm-label {
+            font-size: 11px;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 4px;
+        }
+
+        .bm-sub {
+            font-size: 12px;
+            color: var(--green);
+            font-weight: 600;
+            margin-top: 2px;
+        }
+
+        /* Section */
+        .section {
+            margin-bottom: var(--space-3xl);
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-lg);
+        }
+
+        .section-title h2 {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .section-title .tag {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--green);
+            background: rgba(0,230,118,0.1);
+            padding: 3px 10px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .section-desc {
+            color: var(--text-secondary);
+            font-size: 15px;
+            margin-top: -var(--space-sm);
+            margin-bottom: var(--space-lg);
+        }
+
+        /* Cards */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md); }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-md); }
+        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-md); }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: var(--space-lg);
+            transition: border-color 0.2s var(--ease);
+        }
+
+        .card:hover {
+            border-color: rgba(255,255,255,0.15);
+        }
+
+        .card-eyebrow {
+            font-size: 11px;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            margin-bottom: var(--space-sm);
+        }
+
+        .card-metric {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--white);
+            letter-spacing: -1px;
+            line-height: 1.2;
+        }
+
+        .card-sub {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        /* Protocol Info */
+        .protocol-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1px;
+            background: var(--border);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+
+        .protocol-item {
+            background: var(--bg-card);
+            padding: var(--space-md);
+        }
+
+        .protocol-label {
+            font-size: 11px;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .protocol-value {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--white);
+        }
+
+        /* Supply Breakdown */
+        .supply-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.06);
+            border-radius: 4px;
+            margin: var(--space-md) 0;
+            overflow: hidden;
+            display: flex;
+        }
+
+        .supply-bar .seg-backed {
+            background: var(--amber);
+            height: 100%;
+        }
+
+        .supply-bar .seg-mined {
+            background: var(--hot-pink);
+            height: 100%;
+        }
+
+        .supply-bar .seg-earned {
+            background: var(--violet);
+            height: 100%;
+        }
+
+        .supply-legend {
+            display: flex;
+            gap: var(--space-lg);
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .legend-dot {
+            width: 8px; height: 8px;
+            border-radius: 2px;
+        }
+
+        /* Hash display */
+        .hash-box {
+            font-family: 'SF Mono', monospace;
+            font-size: 12px;
+            color: var(--text-secondary);
+            background: rgba(0,0,0,0.5);
+            padding: var(--space-sm) var(--space-md);
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            word-break: break-all;
+            line-height: 1.5;
+            cursor: pointer;
+            transition: border-color 0.2s;
+            position: relative;
+        }
+
+        .hash-box:hover {
+            border-color: var(--hot-pink);
+        }
+
+        .hash-box::after {
+            content: 'Click to copy';
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 10px;
+            color: var(--text-tertiary);
+            opacity: 0;
+            transition: opacity 0.2s;
+            font-family: -apple-system, sans-serif;
+        }
+
+        .hash-box:hover::after { opacity: 1; }
+
+        .hash-box.copied::after {
+            content: 'Copied!';
+            color: var(--green);
+            opacity: 1;
+        }
+
+        /* Address display */
+        .address-box {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-sm);
+            font-family: 'SF Mono', monospace;
+            font-size: 14px;
+            color: var(--amber);
+            background: rgba(245,166,35,0.06);
+            padding: var(--space-sm) var(--space-md);
+            border-radius: 8px;
+            border: 1px solid rgba(245,166,35,0.15);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .address-box:hover {
+            background: rgba(245,166,35,0.1);
+            border-color: rgba(245,166,35,0.3);
+        }
+
+        .copy-icon {
+            opacity: 0.5;
+            font-size: 12px;
+        }
+
+        /* Table */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th {
+            text-align: left;
+            padding: var(--space-sm) var(--space-md);
+            font-size: 11px;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .data-table td {
+            padding: var(--space-sm) var(--space-md);
+            font-size: 14px;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            font-family: 'SF Mono', monospace;
+        }
+
+        .data-table tr:last-child td { border-bottom: none; }
+
+        .data-table .td-id { color: var(--hot-pink); }
+        .data-table .td-green { color: var(--green); }
+        .data-table .td-hash { color: var(--text-tertiary); font-size: 12px; }
+
+        /* Verify link */
+        .verify-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: var(--electric-blue);
+            text-decoration: none;
+            font-weight: 600;
+            transition: opacity 0.2s;
+        }
+
+        .verify-link:hover { opacity: 0.8; }
+
+        .verify-link svg {
+            width: 14px; height: 14px;
+        }
+
+        /* Proof section */
+        .proof-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+
+        .proof-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-lg);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .proof-header h3 {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .proof-body {
+            padding: var(--space-lg);
+        }
+
+        .proof-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: var(--space-sm) 0;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+        }
+
+        .proof-row:last-child { border-bottom: none; }
+
+        .proof-label {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            min-width: 120px;
+            padding-top: 2px;
+        }
+
+        .proof-value {
+            font-family: 'SF Mono', monospace;
+            font-size: 12px;
+            color: var(--text-secondary);
+            word-break: break-all;
+            text-align: right;
+            flex: 1;
+            margin-left: var(--space-md);
+            cursor: pointer;
+        }
+
+        .proof-value:hover { color: var(--white); }
+
+        /* Payments */
+        .payment-row {
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            gap: var(--space-lg);
+            align-items: center;
+            padding: var(--space-md) 0;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+        }
+
+        .payment-row:last-child { border-bottom: none; }
+
+        .pr-name { font-weight: 600; font-size: 14px; }
+        .pr-memo { font-size: 12px; color: var(--text-tertiary); }
+        .pr-amount { font-family: 'SF Mono', monospace; font-weight: 600; text-align: right; }
+        .pr-road { font-size: 12px; color: var(--text-tertiary); font-family: 'SF Mono', monospace; }
+
+        .pr-status {
+            font-size: 11px;
+            color: var(--green);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .pr-check { color: var(--green); }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: var(--space-xl) 0 var(--space-2xl);
+            border-top: 1px solid var(--border);
+        }
+
+        footer p {
+            color: var(--text-tertiary);
+            font-size: 12px;
+            line-height: 1.8;
+        }
+
+        footer .footer-logo {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-sm);
+        }
+
+        footer a {
+            color: var(--text-secondary);
+            text-decoration: none;
+        }
+
+        footer a:hover { color: var(--white); }
+
+        /* Divider */
+        .divider {
+            height: 1px;
+            background: var(--border);
+            margin: var(--space-xl) 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+            .hero h1 { font-size: 36px; letter-spacing: -1px; }
+            .balance-amount { font-size: 42px; }
+            .balance-metrics { grid-template-columns: repeat(2, 1fr); }
+            .nav-links { display: none; }
+            .ticker-bar { gap: var(--space-lg); }
+            .payment-row { grid-template-columns: 1fr; gap: var(--space-xs); }
+            .container { padding: 0 var(--space-md); }
+        }
+
+        @media (max-width: 600px) {
+            .balance-metrics { grid-template-columns: 1fr; }
+            .protocol-grid { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="nav-inner">
+            <div class="nav-left">
+                <div class="logo">ROAD<span class="logo-dot"></span></div>
+                <span class="protocol-version">v2.0</span>
+            </div>
+            <div class="nav-links">
+                <a href="#protocol">Protocol</a>
+                <a href="#supply">Supply</a>
+                <a href="#reserve">Reserve</a>
+                <a href="#proof">Proof</a>
+                <a href="#payments">Payments</a>
+                <div class="nav-status">
+                    <div class="status-dot"></div>
+                    Mainnet
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="container">
+            <div class="peg-declaration">
+                <div class="peg-icon">R</div>
+                1 ROAD = 1 BTC &mdash; Cryptographically Signed Peg
+            </div>
+            <h1><span class="accent">Revenue-Backed</span><br>Digital Currency</h1>
+            <p class="hero-sub">ROAD is pegged 1:1 to Bitcoin. Backed by real infrastructure, verified on-chain, with multi-algorithm cryptographic proof.</p>
+
+            <div class="ticker-bar">
+                <div class="ticker-item">
+                    <span class="ticker-label">ROAD/BTC</span>
+                    <span class="ticker-value amber">1.0000</span>
+                </div>
+                <div class="ticker-item">
+                    <span class="ticker-label">BTC/USD</span>
+                    <span class="ticker-value green" id="btc-price-ticker">Loading...</span>
+                </div>
+                <div class="ticker-item">
+                    <span class="ticker-label">ROAD/USD</span>
+                    <span class="ticker-value green" id="road-price-ticker">Loading...</span>
+                </div>
+                <div class="ticker-item">
+                    <span class="ticker-label">Reserve</span>
+                    <span class="ticker-value amber">0.22001506 BTC</span>
+                </div>
+                <div class="ticker-item">
+                    <span class="ticker-label">Block</span>
+                    <span class="ticker-value pink">#19,981</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Balance -->
+    <section class="container balance-section">
+        <div class="balance-card">
+            <div class="balance-eyebrow">Wallet Balance</div>
+            <div class="balance-amount" id="balance-display">1,026,950.51 <span class="currency">ROAD</span></div>
+            <div class="balance-usd" id="balance-usd">Loading...</div>
+            <div class="balance-usd-note">at 1 ROAD = 1 BTC peg &middot; live BTC price via CoinGecko</div>
+
+            <div class="balance-metrics">
+                <div class="bm-item">
+                    <div class="bm-value">0.22001506</div>
+                    <div class="bm-label">BTC Reserve</div>
+                    <div class="bm-sub" id="reserve-usd"></div>
+                </div>
+                <div class="bm-item">
+                    <div class="bm-value">3,849</div>
+                    <div class="bm-label">Blocks Mined</div>
+                </div>
+                <div class="bm-item">
+                    <div class="bm-value">20,949.93</div>
+                    <div class="bm-label">Total Mined</div>
+                </div>
+                <div class="bm-item">
+                    <div class="bm-value">1,026,950.51</div>
+                    <div class="bm-label">Total Earned</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Protocol -->
+    <section id="protocol" class="container section">
+        <div class="section-title">
+            <h2>Protocol</h2>
+            <span class="tag">Active</span>
+        </div>
+
+        <div class="protocol-grid">
+            <div class="protocol-item">
+                <div class="protocol-label">Protocol</div>
+                <div class="protocol-value">ROADCOIN</div>
+            </div>
+            <div class="protocol-item">
+                <div class="protocol-label">Version</div>
+                <div class="protocol-value">2.0</div>
+            </div>
+            <div class="protocol-item">
+                <div class="protocol-label">Consensus</div>
+                <div class="protocol-value">Proof of Work</div>
+            </div>
+            <div class="protocol-item">
+                <div class="protocol-label">Hash Algorithm</div>
+                <div class="protocol-value">SHA-256</div>
+            </div>
+            <div class="protocol-item">
+                <div class="protocol-label">Block Height</div>
+                <div class="protocol-value">19,981</div>
+            </div>
+            <div class="protocol-item">
+                <div class="protocol-label">Max Supply</div>
+                <div class="protocol-value">21,000,000</div>
+            </div>
+            <div class="protocol-item">
+                <div class="protocol-label">Peg</div>
+                <div class="protocol-value" style="color: var(--amber);">1 ROAD = 1 BTC</div>
+            </div>
+            <div class="protocol-item">
+                <div class="protocol-label">Signature</div>
+                <div class="protocol-value">HMAC-SHA512</div>
+            </div>
+            <div class="protocol-item">
+                <div class="protocol-label">Hashrate</div>
+                <div class="protocol-value">1.6M H/s</div>
+            </div>
+            <div class="protocol-item">
+                <div class="protocol-label">Genesis</div>
+                <div class="protocol-value">Feb 17, 2026</div>
+            </div>
+            <div class="protocol-item">
+                <div class="protocol-label">Issuer</div>
+                <div class="protocol-value">BlackRoad OS, Inc.</div>
+            </div>
+            <div class="protocol-item">
+                <div class="protocol-label">Network</div>
+                <div class="protocol-value" style="color: var(--green);">Mainnet</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Supply -->
+    <section id="supply" class="container section">
+        <div class="section-title">
+            <h2>Supply</h2>
+            <span class="tag">Transparent</span>
+        </div>
+
+        <div class="card" style="margin-bottom: var(--space-md);">
+            <div class="grid-3" style="margin-bottom: var(--space-md);">
+                <div>
+                    <div class="card-eyebrow">Circulating Supply</div>
+                    <div class="card-metric">1,026,951</div>
+                    <div class="card-sub">ROAD in circulation</div>
+                </div>
+                <div>
+                    <div class="card-eyebrow">BTC-Backed Supply</div>
+                    <div class="card-metric" style="color: var(--amber);">0.220</div>
+                    <div class="card-sub">ROAD backed 1:1 by BTC reserve</div>
+                </div>
+                <div>
+                    <div class="card-eyebrow">Max Supply</div>
+                    <div class="card-metric" style="color: var(--text-secondary);">21,000,000</div>
+                    <div class="card-sub">Hard cap (mirroring Bitcoin)</div>
+                </div>
+            </div>
+
+            <div class="supply-bar">
+                <div class="seg-backed" style="width: 0.02%;"></div>
+                <div class="seg-mined" style="width: 2.04%;"></div>
+                <div class="seg-earned" style="width: 2.83%;"></div>
+            </div>
+
+            <div class="supply-legend">
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: var(--amber);"></div>
+                    BTC-Backed: 0.22 ROAD
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: var(--hot-pink);"></div>
+                    Mined (PoW): 20,949.93 ROAD
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: var(--violet);"></div>
+                    Compute Earned: 1,005,999.36 ROAD
+                </div>
+            </div>
+        </div>
+
+        <div class="grid-4">
+            <div class="card">
+                <div class="card-eyebrow">Mined</div>
+                <div class="card-metric" style="font-size: 24px;">20,949.93</div>
+                <div class="card-sub">From proof-of-work</div>
+            </div>
+            <div class="card">
+                <div class="card-eyebrow">Earned</div>
+                <div class="card-metric" style="font-size: 24px;">1,005,999</div>
+                <div class="card-sub">AI compute sessions</div>
+            </div>
+            <div class="card">
+                <div class="card-eyebrow">Reserve Ratio</div>
+                <div class="card-metric" style="font-size: 24px; color: var(--amber);">0.02%</div>
+                <div class="card-sub">BTC backing / supply</div>
+            </div>
+            <div class="card">
+                <div class="card-eyebrow">Total Hashes</div>
+                <div class="card-metric" style="font-size: 24px;">71.58M</div>
+                <div class="card-sub">Proof-of-work computed</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reserve -->
+    <section id="reserve" class="container section">
+        <div class="section-title">
+            <h2>Proof of Reserve</h2>
+            <span class="tag">On-Chain</span>
+        </div>
+
+        <div class="proof-section" style="margin-bottom: var(--space-md);">
+            <div class="proof-header">
+                <h3>BTC Reserve Address</h3>
+                <a class="verify-link" href="https://mempool.space/address/bc1qqf4l8mj0cjz6gqvvjdmqmdkez5x2gq4smu5fr4" target="_blank" rel="noopener">
+                    Verify on mempool.space
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
+                </a>
+            </div>
+            <div class="proof-body">
+                <div class="address-box" onclick="copyText('bc1qqf4l8mj0cjz6gqvvjdmqmdkez5x2gq4smu5fr4', this)" style="margin-bottom: var(--space-lg);">
+                    bc1qqf4l8mj0cjz6gqvvjdmqmdkez5x2gq4smu5fr4
+                    <span class="copy-icon">COPY</span>
+                </div>
+
+                <div class="grid-3">
+                    <div>
+                        <div class="card-eyebrow">Total Deposited</div>
+                        <div style="font-size: 24px; font-weight: 700; color: var(--amber);">0.22001506 BTC</div>
+                        <div class="card-sub" id="deposited-usd"></div>
+                    </div>
+                    <div>
+                        <div class="card-eyebrow">Conversions</div>
+                        <div style="font-size: 24px; font-weight: 700;">3</div>
+                        <div class="card-sub">BTC deposit transactions</div>
+                    </div>
+                    <div>
+                        <div class="card-eyebrow">Source</div>
+                        <div style="font-size: 24px; font-weight: 700;">Coinbase</div>
+                        <div class="card-sub">Verified exchange</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="proof-section">
+            <div class="proof-header">
+                <h3>Deposit History</h3>
+                <span style="font-size: 12px; color: var(--text-tertiary);">All conversions are 1:1 BTC to ROAD</span>
+            </div>
+            <div style="padding: 0 var(--space-lg);">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Date</th>
+                            <th>BTC</th>
+                            <th>ROAD Minted</th>
+                            <th>USD at Time</th>
+                            <th>TX Hash</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="td-id">CONV-CFF278F7</td>
+                            <td>Feb 19, 2026</td>
+                            <td>0.10000000</td>
+                            <td>0.10000000</td>
+                            <td class="td-green">$6,641.00</td>
+                            <td class="td-hash" title="523ef245448a2bb79498f054ef5292641c21638723cbc5cebcbd197a33e33691">523ef245...33e33691</td>
+                        </tr>
+                        <tr>
+                            <td class="td-id">CONV-9D8F4E39</td>
+                            <td>Feb 20, 2026</td>
+                            <td>0.12000000</td>
+                            <td>0.12000000</td>
+                            <td class="td-green">$7,969.20</td>
+                            <td class="td-hash" title="5e80eabf44b6a5c357613f41cf5bc346b888c56334863ffb045fef9c81c475f4">5e80eabf...c1c475f4</td>
+                        </tr>
+                        <tr>
+                            <td class="td-id">CONV-71A2292E</td>
+                            <td>Feb 20, 2026</td>
+                            <td>0.00001506</td>
+                            <td>0.00001506</td>
+                            <td class="td-green">$1.00</td>
+                            <td class="td-hash" title="ccf977925271ce7b0ec5220157255a22598fb7b17364ea0b0cab481a7aaed9a7">ccf97792...7aaed9a7</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Proof of Peg -->
+    <section id="proof" class="container section">
+        <div class="section-title">
+            <h2>Proof of Peg</h2>
+            <span class="tag">Cryptographic</span>
+        </div>
+
+        <!-- Peg Declaration -->
+        <div class="proof-section" style="margin-bottom: var(--space-md);">
+            <div class="proof-header">
+                <h3>Peg Declaration</h3>
+                <span style="font-size: 12px; color: var(--green); font-weight: 700;">SIGNED &amp; VERIFIED</span>
+            </div>
+            <div class="proof-body">
+                <div style="text-align: center; padding: var(--space-lg) 0; border-bottom: 1px solid var(--border); margin-bottom: var(--space-lg);">
+                    <div style="font-size: 48px; font-weight: 900; letter-spacing: -2px;">
+                        <span style="color: var(--hot-pink);">1 ROAD</span>
+                        <span style="color: var(--text-tertiary); margin: 0 var(--space-sm);">=</span>
+                        <span style="color: var(--amber);">1 BTC</span>
+                    </div>
+                    <div style="font-size: 13px; color: var(--text-tertiary); margin-top: var(--space-xs);">
+                        Declared Feb 21, 2026 00:05:06 UTC &middot; Block #19,981
+                    </div>
+                </div>
+
+                <div class="proof-row">
+                    <div class="proof-label">Signer</div>
+                    <div class="proof-value" onclick="copyText('ROADcdc32442d095f2798b557f484c19433f2ce47eef', this)">ROADcdc32442d095f2798b557f484c19433f2ce47eef</div>
+                </div>
+                <div class="proof-row">
+                    <div class="proof-label">Public Key</div>
+                    <div class="proof-value" onclick="copyText('d8a1ad68740424a4fe4cdebd791dd1415486577fee48bc079577e83e12e29f0c', this)">d8a1ad68740424a4fe4cdebd791dd1415486577fee48bc079577e83e12e29f0c</div>
+                </div>
+                <div class="proof-row">
+                    <div class="proof-label">Algorithm</div>
+                    <div class="proof-value" style="cursor: default;">HMAC-SHA512</div>
+                </div>
+                <div class="proof-row">
+                    <div class="proof-label">Signature</div>
+                    <div class="proof-value" onclick="copyText('f2d9d41b296d9c11dcca31fb3e961b54ba1b53135ed5119e0c698b5baf234302fc0901c5a13a04ffa493dca9d2005d9f91f63a91f542aff44cc6cbf385362e20', this)" style="color: var(--green);">f2d9d41b296d9c11dcca31fb3e961b54ba1b53135ed5119e0c698b5baf234302fc0901c5a13a04ffa493dca9d2005d9f91f63a91f542aff44cc6cbf385362e20</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Multi-Hash Verification -->
+        <div class="proof-section" style="margin-bottom: var(--space-md);">
+            <div class="proof-header">
+                <h3>Multi-Algorithm Verification</h3>
+                <span style="font-size: 12px; color: var(--text-tertiary);">4 independent hash algorithms</span>
+            </div>
+            <div class="proof-body">
+                <div class="proof-row">
+                    <div class="proof-label" style="color: var(--amber);">SHA-256</div>
+                    <div class="proof-value" onclick="copyText('85efb739e4fb3f24793a9cf6c3da984e756b37b34d9d50d0c7d88f2e39ee7d39', this)">85efb739e4fb3f24793a9cf6c3da984e756b37b34d9d50d0c7d88f2e39ee7d39</div>
+                </div>
+                <div class="proof-row">
+                    <div class="proof-label" style="color: var(--amber);">SHA-512</div>
+                    <div class="proof-value" onclick="copyText('d3fe807fa093ac70e53559dbffd02cb1e9914b1cd04ff0eae4af438d733fe9fe7db87ed2b61242366e1500cf325d7f1945f06999c17c81b55e476fbf598c5eb8', this)">d3fe807fa093ac70e53559dbffd02cb1e9914b1cd04ff0eae4af438d733fe9fe7db87ed2b61242366e1500cf325d7f1945f06999c17c81b55e476fbf598c5eb8</div>
+                </div>
+                <div class="proof-row">
+                    <div class="proof-label" style="color: var(--amber);">SHA3-256</div>
+                    <div class="proof-value" onclick="copyText('f42d423690f585315325c978f831858c30a9e4ba4b01cb63668219c9b99c3299', this)">f42d423690f585315325c978f831858c30a9e4ba4b01cb63668219c9b99c3299</div>
+                </div>
+                <div class="proof-row">
+                    <div class="proof-label" style="color: var(--amber);">BLAKE2b</div>
+                    <div class="proof-value" onclick="copyText('6c74452d7003c467be52e46a773f4c3c7a7e483b6190c05c3e0cd04b2b96f61541785b1a3ad52d3a8ce4c53a696c76e0633ee22e7620a2e2b73c4eb96055872d', this)">6c74452d7003c467be52e46a773f4c3c7a7e483b6190c05c3e0cd04b2b96f61541785b1a3ad52d3a8ce4c53a696c76e0633ee22e7620a2e2b73c4eb96055872d</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chain Proof -->
+        <div class="proof-section" style="margin-bottom: var(--space-md);">
+            <div class="proof-header">
+                <h3>Chain Proof</h3>
+                <span style="font-size: 12px; color: var(--text-tertiary);">Linked to RoadChain block #19,981</span>
+            </div>
+            <div class="proof-body">
+                <div class="proof-row">
+                    <div class="proof-label">Prev Block</div>
+                    <div class="proof-value" onclick="copyText('00000bbda578ee84a574c3b5990486579bcb58312680ee1e05968eca06d5f0e3', this)" style="color: var(--violet);">00000bbda578ee84a574c3b5990486579bcb58312680ee1e05968eca06d5f0e3</div>
+                </div>
+                <div class="proof-row">
+                    <div class="proof-label">Chain Hash</div>
+                    <div class="proof-value" onclick="copyText('e2a0384adf59426f62f518d0adb50db4e97a326b809a8c3921ac9327405cea67', this)" style="color: var(--electric-blue);">e2a0384adf59426f62f518d0adb50db4e97a326b809a8c3921ac9327405cea67</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Merkle Root -->
+        <div class="proof-section">
+            <div class="proof-header">
+                <h3>Merkle Root</h3>
+                <span style="font-size: 12px; color: var(--text-tertiary);">7 proof leaves</span>
+            </div>
+            <div class="proof-body" style="text-align: center;">
+                <div class="hash-box" onclick="copyText('64814be5191c95aac992d4a73439e1ef782f16a9771f8ba6bd84f6641684bc24', this)" style="font-size: 16px; font-weight: 600; color: var(--green); padding: var(--space-md); text-align: center;">
+                    64814be5191c95aac992d4a73439e1ef782f16a9771f8ba6bd84f6641684bc24
+                </div>
+                <div style="font-size: 12px; color: var(--text-tertiary); margin-top: var(--space-sm);">
+                    Computed from: SHA-256 + SHA-512 + SHA3-256 + BLAKE2b + HMAC Signature + Chain Hash + Previous Block
+                </div>
+            </div>
+        </div>
+
+        <!-- Verification Steps -->
+        <div class="card" style="margin-top: var(--space-md);">
+            <div class="card-eyebrow" style="margin-bottom: var(--space-md);">Independent Verification</div>
+            <div style="display: grid; gap: var(--space-sm);">
+                <div style="display: flex; gap: var(--space-sm); align-items: flex-start;">
+                    <span style="color: var(--text-tertiary); font-weight: 700; font-size: 13px; min-width: 20px;">1.</span>
+                    <span style="font-size: 13px; color: var(--text-secondary);">Compute SHA-256 of the declaration JSON (sorted keys, no whitespace) and verify it matches the declaration hash</span>
+                </div>
+                <div style="display: flex; gap: var(--space-sm); align-items: flex-start;">
+                    <span style="color: var(--text-tertiary); font-weight: 700; font-size: 13px; min-width: 20px;">2.</span>
+                    <span style="font-size: 13px; color: var(--text-secondary);">Verify all 4 hash algorithms (SHA-256, SHA-512, SHA3-256, BLAKE2b) independently produce matching values</span>
+                </div>
+                <div style="display: flex; gap: var(--space-sm); align-items: flex-start;">
+                    <span style="color: var(--text-tertiary); font-weight: 700; font-size: 13px; min-width: 20px;">3.</span>
+                    <span style="font-size: 13px; color: var(--text-secondary);">Verify chain_hash = SHA-256(prev_block_hash + ledger_entry_json) links to block #19,981</span>
+                </div>
+                <div style="display: flex; gap: var(--space-sm); align-items: flex-start;">
+                    <span style="color: var(--text-tertiary); font-weight: 700; font-size: 13px; min-width: 20px;">4.</span>
+                    <span style="font-size: 13px; color: var(--text-secondary);">Rebuild Merkle tree from 7 leaves and confirm root matches <span class="mono" style="color: var(--green);">64814be5...</span></span>
+                </div>
+                <div style="display: flex; gap: var(--space-sm); align-items: flex-start;">
+                    <span style="color: var(--text-tertiary); font-weight: 700; font-size: 13px; min-width: 20px;">5.</span>
+                    <span style="font-size: 13px; color: var(--text-secondary);">Verify BTC reserve at <a class="verify-link" href="https://mempool.space/address/bc1qqf4l8mj0cjz6gqvvjdmqmdkez5x2gq4smu5fr4" target="_blank" rel="noopener" style="display: inline;">bc1qqf4l8...smu5fr4 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline; vertical-align: middle;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg></a></span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Payments -->
+    <section id="payments" class="container section">
+        <div class="section-title">
+            <h2>Payments</h2>
+            <span class="tag">11 Completed</span>
+        </div>
+
+        <div class="grid-3" style="margin-bottom: var(--space-md);">
+            <div class="card">
+                <div class="card-eyebrow">Total Paid</div>
+                <div class="card-metric" style="color: var(--green);">$15,623</div>
+                <div class="card-sub">Real-world payments in ROAD</div>
+            </div>
+            <div class="card">
+                <div class="card-eyebrow">ROAD Used</div>
+                <div class="card-metric">0.1562</div>
+                <div class="card-sub">At 1 ROAD = 1 BTC rate</div>
+            </div>
+            <div class="card">
+                <div class="card-eyebrow">Categories</div>
+                <div class="card-metric">5</div>
+                <div class="card-sub">Housing, credit, utilities, internet, services</div>
+            </div>
+        </div>
+
+        <div class="proof-section">
+            <div class="proof-header">
+                <h3>Transaction History</h3>
+            </div>
+            <div style="padding: var(--space-md) var(--space-lg);">
+                <div class="payment-row">
+                    <div><div class="pr-name">Rent</div><div class="pr-memo">Housing - Feb 2026</div></div>
+                    <div class="pr-amount"><div>$3,200.00</div><div class="pr-road">0.0320000 ROAD</div></div>
+                    <div class="pr-status"><span class="pr-check">&#10003;</span> Settled</div>
+                </div>
+                <div class="payment-row">
+                    <div><div class="pr-name">Capital One</div><div class="pr-memo">Credit card - Feb 2026</div></div>
+                    <div class="pr-amount"><div>$2,847.53</div><div class="pr-road">0.0284753 ROAD</div></div>
+                    <div class="pr-status"><span class="pr-check">&#10003;</span> Settled</div>
+                </div>
+                <div class="payment-row">
+                    <div><div class="pr-name">Chase Sapphire</div><div class="pr-memo">Credit card - Feb 2026</div></div>
+                    <div class="pr-amount"><div>$1,892.14</div><div class="pr-road">0.0189214 ROAD</div></div>
+                    <div class="pr-status"><span class="pr-check">&#10003;</span> Settled</div>
+                </div>
+                <div class="payment-row">
+                    <div><div class="pr-name">Electric</div><div class="pr-memo">Utility - Feb 2026</div></div>
+                    <div class="pr-amount"><div>$247.89</div><div class="pr-road">0.0024789 ROAD</div></div>
+                    <div class="pr-status"><span class="pr-check">&#10003;</span> Settled</div>
+                </div>
+                <div class="payment-row">
+                    <div><div class="pr-name">Internet</div><div class="pr-memo">Connectivity - Feb 2026</div></div>
+                    <div class="pr-amount"><div>$189.99</div><div class="pr-road">0.0018999 ROAD</div></div>
+                    <div class="pr-status"><span class="pr-check">&#10003;</span> Settled</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Earning -->
+    <section class="container section">
+        <div class="section-title">
+            <h2>Earning</h2>
+            <span class="tag">AI Compute</span>
+        </div>
+
+        <div class="grid-2">
+            <div class="card">
+                <div class="card-eyebrow">Sessions Tracked</div>
+                <div class="card-metric">2,472</div>
+                <div class="card-sub" style="margin-bottom: var(--space-md);">Claude Code sessions logged to compute ledger</div>
+
+                <div class="divider" style="margin: var(--space-sm) 0;"></div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md); margin-top: var(--space-sm);">
+                    <div>
+                        <div class="card-eyebrow">Model</div>
+                        <div style="font-weight: 700;">Opus 4.6</div>
+                    </div>
+                    <div>
+                        <div class="card-eyebrow">Earn Rate</div>
+                        <div style="font-weight: 700; color: var(--hot-pink);">$0.01 = 1 ROAD</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-eyebrow">Earning Model</div>
+                <div style="margin-top: var(--space-sm);">
+                    <div class="proof-row">
+                        <div class="proof-label" style="font-size: 13px;">Session cost</div>
+                        <div style="font-size: 13px; color: var(--text-secondary);">Tracked in USD</div>
+                    </div>
+                    <div class="proof-row">
+                        <div class="proof-label" style="font-size: 13px;">ROAD earned</div>
+                        <div style="font-size: 13px; color: var(--hot-pink); font-weight: 600;">cost_usd x 100</div>
+                    </div>
+                    <div class="proof-row">
+                        <div class="proof-label" style="font-size: 13px;">Logging</div>
+                        <div style="font-size: 13px; color: var(--text-secondary);">Per-session JSONL</div>
+                    </div>
+                    <div class="proof-row">
+                        <div class="proof-label" style="font-size: 13px;">Last earn</div>
+                        <div style="font-size: 13px; color: var(--green); font-weight: 600;">5.20 ROAD ($0.052)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Infrastructure -->
+    <section class="container section">
+        <div class="section-title">
+            <h2>Infrastructure</h2>
+            <span class="tag">Backing</span>
+        </div>
+
+        <div class="protocol-grid">
+            <div class="protocol-item">
+                <div class="protocol-label">Cloudflare Projects</div>
+                <div class="protocol-value">205</div>
+            </div>
+            <div class="protocol-item">
+                <div class="protocol-label">GitHub Repos</div>
+                <div class="protocol-value">1,085</div>
+            </div>
+            <div class="protocol-item">
+                <div class="protocol-label">GitHub Orgs</div>
+                <div class="protocol-value">15</div>
+            </div>
+            <div class="protocol-item">
+                <div class="protocol-label">Compute Devices</div>
+                <div class="protocol-value">8</div>
+            </div>
+            <div class="protocol-item">
+                <div class="protocol-label">Domains</div>
+                <div class="protocol-value">12</div>
+            </div>
+            <div class="protocol-item">
+                <div class="protocol-label">AI Agents</div>
+                <div class="protocol-value">30,000</div>
+            </div>
+        </div>
+
+        <div class="grid-3" style="margin-top: var(--space-md);">
+            <div class="card">
+                <div class="card-eyebrow">Revenue Streams</div>
+                <div class="card-metric" style="font-size: 24px;">5</div>
+                <div class="card-sub">API, AI inference, OS license, agent identity, edge hosting</div>
+            </div>
+            <div class="card">
+                <div class="card-eyebrow">AI Compute</div>
+                <div class="card-metric" style="font-size: 24px;">52 TOPS</div>
+                <div class="card-sub">Hailo-8 + Pi 5 cluster</div>
+            </div>
+            <div class="card">
+                <div class="card-eyebrow">Edge Locations</div>
+                <div class="card-metric" style="font-size: 24px;">Global</div>
+                <div class="card-sub">Cloudflare CDN (300+ cities)</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-logo">ROAD Protocol &middot; BlackRoad OS, Inc.</div>
+            <p>&copy; 2026 BlackRoad OS, Inc. All rights reserved.</p>
+            <p style="margin-top: var(--space-sm); max-width: 600px; margin-left: auto; margin-right: auto;">
+                ROAD is a proprietary revenue-backed digital currency issued by BlackRoad OS, Inc.
+                Not a security. Not available for public trading. 1 ROAD = 1 BTC peg is a declared rate
+                by the sole issuer. Verify reserve independently at
+                <a href="https://mempool.space/address/bc1qqf4l8mj0cjz6gqvvjdmqmdkez5x2gq4smu5fr4" target="_blank" rel="noopener">mempool.space</a>.
+            </p>
+            <p style="margin-top: var(--space-sm);">
+                <span id="last-updated" style="color: var(--text-tertiary);"></span>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Live BTC price from CoinGecko (free, no API key)
+        let btcPrice = 0;
+        const BALANCE = 1026950.5075;
+        const BTC_RESERVE = 0.22001506;
+
+        async function fetchBtcPrice() {
+            try {
+                const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
+                const data = await res.json();
+                btcPrice = data.bitcoin.usd;
+                updatePrices();
+            } catch (e) {
+                // Fallback
+                btcPrice = 96400;
+                updatePrices();
+            }
+        }
+
+        function formatUsd(n) {
+            if (n >= 1e12) return '$' + (n / 1e12).toFixed(2) + 'T';
+            if (n >= 1e9) return '$' + (n / 1e9).toFixed(2) + 'B';
+            if (n >= 1e6) return '$' + (n / 1e6).toFixed(2) + 'M';
+            if (n >= 1e3) return '$' + n.toLocaleString('en-US', { maximumFractionDigits: 0 });
+            return '$' + n.toFixed(2);
+        }
+
+        function updatePrices() {
+            // Ticker
+            document.getElementById('btc-price-ticker').textContent = formatUsd(btcPrice);
+            document.getElementById('road-price-ticker').textContent = formatUsd(btcPrice);
+
+            // Balance
+            const balanceUsd = BALANCE * btcPrice;
+            document.getElementById('balance-usd').textContent = formatUsd(balanceUsd);
+
+            // Reserve
+            const reserveUsd = BTC_RESERVE * btcPrice;
+            const el1 = document.getElementById('reserve-usd');
+            const el2 = document.getElementById('deposited-usd');
+            if (el1) el1.textContent = formatUsd(reserveUsd);
+            if (el2) el2.textContent = formatUsd(reserveUsd) + ' at current rate';
+        }
+
+        // Copy to clipboard
+        function copyText(text, el) {
+            navigator.clipboard.writeText(text).then(() => {
+                el.classList.add('copied');
+                const orig = el.querySelector('.copy-icon');
+                if (orig) orig.textContent = 'COPIED';
+                setTimeout(() => {
+                    el.classList.remove('copied');
+                    if (orig) orig.textContent = 'COPY';
+                }, 2000);
+            });
+        }
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(a => {
+            a.addEventListener('click', e => {
+                e.preventDefault();
+                const t = document.querySelector(a.getAttribute('href'));
+                if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+
+        // Last updated
+        document.getElementById('last-updated').textContent =
+            'Data as of ' + new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+
+        // Init
+        fetchBtcPrice();
+        // Refresh price every 60s
+        setInterval(fetchBtcPrice, 60000);
+    </script>
+</body>
+</html>
