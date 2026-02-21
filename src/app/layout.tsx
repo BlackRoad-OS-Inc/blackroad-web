@@ -1,10 +1,32 @@
-// Copyright (c) 2025-2026 BlackRoad OS, Inc. All Rights Reserved.
 import type { Metadata } from 'next'
+import Navigation from './components/Navigation'
+import Footer from './components/Footer'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'BlackRoad OS',
-  description: 'AI Agent Orchestration Platform',
+  metadataBase: new URL('https://blackroad-os-web.pages.dev'),
+  title: {
+    default: 'BlackRoad OS — The Operating System for Governed AI',
+    template: '%s | BlackRoad OS',
+  },
+  description: 'Deploy 30,000 autonomous AI agents with cryptographic identity, deterministic reasoning, and complete audit trails. Built for fintech, healthcare, education, and government.',
+  keywords: ['AI platform', 'agent orchestration', 'governed AI', 'compliance', 'audit trails', 'BlackRoad OS', 'ALICE QI', 'Lucidia', 'RoadChain', 'Prism Console'],
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    siteName: 'BlackRoad OS',
+    title: 'BlackRoad OS — The Operating System for Governed AI',
+    description: 'Deploy 30,000 autonomous AI agents with cryptographic identity, deterministic reasoning, and complete audit trails.',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'BlackRoad OS — The Operating System for Governed AI',
+    description: 'Deploy 30,000 autonomous AI agents with cryptographic identity, deterministic reasoning, and complete audit trails.',
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 }
 
 export default function RootLayout({
@@ -14,7 +36,18 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body style={{
+        margin: 0,
+        fontFamily: 'var(--br-font)',
+        backgroundColor: 'var(--br-deep-black)',
+        color: 'var(--br-cream)',
+      }}>
+        <Navigation />
+        <div style={{ paddingTop: '64px' }}>
+          {children}
+        </div>
+        <Footer />
+      </body>
     </html>
   )
 }
