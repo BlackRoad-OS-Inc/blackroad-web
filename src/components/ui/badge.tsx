@@ -1,14 +1,15 @@
-import { ReactNode } from 'react';
-import { cn } from '@/lib/cn';
+// Copyright (c) 2025-2026 BlackRoad OS, Inc. All Rights Reserved.
+import { ReactNode } from 'react'
+import { cn } from '@/lib/cn'
 
 interface BadgeProps {
-  children: ReactNode;
-  variant?: 'default' | 'success' | 'warning' | 'error' | 'info';
-  size?: 'sm' | 'md';
-  className?: string;
+  children: ReactNode
+  variant?: 'default' | 'success' | 'warning' | 'error' | 'info'
+  size?: 'sm' | 'md'
+  className?: string
 }
 
-export default function Badge({
+export function Badge({
   children,
   variant = 'default',
   size = 'md',
@@ -20,12 +21,12 @@ export default function Badge({
     warning: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
     error: 'bg-red-500/10 text-red-400 border-red-500/20',
     info: 'bg-[#2979FF]/10 text-[#2979FF] border-[#2979FF]/20',
-  };
+  }
 
   const sizes = {
     sm: 'px-2 py-0.5 text-xs',
     md: 'px-2.5 py-1 text-sm',
-  };
+  }
 
   return (
     <span
@@ -33,10 +34,12 @@ export default function Badge({
         'inline-flex items-center font-medium rounded-full border',
         variants[variant],
         sizes[size],
-        className
+        className,
       )}
     >
       {children}
     </span>
-  );
+  )
 }
+
+export default Badge
