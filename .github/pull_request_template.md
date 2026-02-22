@@ -1,15 +1,23 @@
 ## Summary
-<!-- What does this PR change? -->
+<!-- What does this PR do? -->
 
 ## Type
-- [ ] Feature
-- [ ] Bug fix
-- [ ] UI/Design
-- [ ] Documentation
+- [ ] 🚀 Feature
+- [ ] 🐛 Bug Fix
+- [ ] 🔧 Chore / Refactor
+- [ ] 📚 Documentation
+- [ ] 🔒 Security
+
+## Changes
+<!-- List key changes -->
+-
+
+## Testing
+- [ ] Unit tests pass
+- [ ] Manual testing done
+- [ ] No regressions
 
 ## Checklist
-- [ ] `npm run typecheck` passes
-- [ ] `npm run build` succeeds
-- [ ] Tests pass
-- [ ] Brand compliance verified
-- [ ] Responsive design checked
+- [ ] CHANGELOG.md updated
+- [ ] No secrets committed
+- [ ] CI passes
