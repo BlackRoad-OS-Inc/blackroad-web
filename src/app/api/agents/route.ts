@@ -5,14 +5,10 @@ const GATEWAY = process.env.BLACKROAD_GATEWAY_URL ?? 'http://127.0.0.1:8787'
 
 export async function GET() {
   try {
-    const res = await fetch(`${GATEWAY}/v1/health`, { next: { revalidate: 30 } })
+    const res = await fetch(`${GATEWAY}/v1/agents`, { next: { revalidate: 60 } })
     if (!res.ok) throw new Error(`Gateway ${res.status}`)
-    const data = await res.json()
-    return NextResponse.json(data)
-  } catch (err) {
-    return NextResponse.json(
-      { status: 'degraded', error: String(err) },
-      { status: 503 }
-    )
+    return NextResponse.json(await res.json())
+  } catch {
+    return NextResponse.json({ agents: [] }, { status: 503 })
   }
 }
