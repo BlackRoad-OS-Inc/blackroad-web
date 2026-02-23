@@ -145,3 +145,7 @@ apps/
 
 # Loose static files
 /index.html
+
+# Playwright
+/playwright-report/
+/test-results/
