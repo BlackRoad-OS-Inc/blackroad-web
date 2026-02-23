@@ -44,6 +44,11 @@ export default function Sidebar() {
       icon: CheckSquare,
     },
     {
+      name: 'Metrics',
+      href: '/metrics',
+      icon: Activity,
+    },
+    {
       name: 'Monitoring',
       href: '/monitoring',
       icon: Activity,
