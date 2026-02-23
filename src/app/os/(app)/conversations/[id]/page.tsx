@@ -11,6 +11,12 @@ interface Message {
   timestamp: Date;
 }
 
+
+export function generateStaticParams() {
+  // Static shell — conversation IDs are client-side only
+  return []
+}
+
 export default function ConversationPage() {
   const params = useParams();
   const [messages, setMessages] = useState<Message[]>([
