@@ -37,11 +37,11 @@ export default function Home() {
 
   const stats = [
     { value: '30K+', label: 'Concurrent Agents' },
-    { value: '225K+', label: 'Components Indexed' },
-    { value: '1,085', label: 'Repositories' },
-    { value: '15', label: 'GitHub Organizations' },
-    { value: '8', label: 'Physical Devices' },
-    { value: '205', label: 'Cloudflare Projects' },
+    { value: '1,825+', label: 'Repositories' },
+    { value: '17', label: 'GitHub Organizations' },
+    { value: '3', label: 'Pi Fleet Nodes' },
+    { value: '75+', label: 'Cloudflare Workers' },
+    { value: '∞', label: 'World Artifacts' },
   ]
 
   const industries = [
