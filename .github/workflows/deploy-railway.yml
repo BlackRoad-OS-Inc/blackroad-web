@@ -1,24 +1,15 @@
 # Copyright (c) 2025-2026 BlackRoad OS, Inc. All Rights Reserved.
-name: Deploy to Railway
+# Copyright (c) 2025-2026 BlackRoad OS, Inc. All Rights Reserved.
+# blackroad-web deploys to Cloudflare Pages (see deploy.yml).
+# Railway deployment is not applicable for this static site.
+name: Deploy to Railway (Disabled)
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 jobs:
-  deploy:
-    name: Deploy to Railway
+  notice:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - run: echo "blackroad-web is a static Cloudflare Pages site. Use deploy.yml for Cloudflare Pages deploy."
 
-      - name: Install Railway CLI
-        run: npm install -g @railway/cli
-
-      - name: Deploy to Railway
-        run: railway up --detach --service blackroad-web
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-          RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
