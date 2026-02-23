@@ -5,6 +5,7 @@ interface Workspace {
   id: string
   name: string
   createdAt: string
+  plan?: string
 }
 
 interface WorkspaceState {
