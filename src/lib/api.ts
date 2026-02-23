@@ -80,4 +80,14 @@ export const api = {
   agents: () => registryFetch<{ agents: Agent[]; count: number }>('/agents'),
   agent: (name: string) => registryFetch<Agent>(`/agents/${name}`),
   registryHealth: () => registryFetch<RegistryHealth>('/health'),
+
+  // Task marketplace
+  tasks: (status?: string) =>
+    registryFetch<{ tasks: unknown[]; count: number }>(`/tasks${status ? `?status=${status}` : ''}`),
+  createTask: (task: { title: string; description?: string; priority?: string; tags?: string[]; requiredCapabilities?: string[] }) =>
+    registryFetch<{ task: unknown }>('/tasks', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(task),
+    }),
 }
