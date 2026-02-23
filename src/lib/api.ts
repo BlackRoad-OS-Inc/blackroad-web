@@ -70,11 +70,54 @@ export interface ChatResponse {
   usage?: { prompt_tokens: number; completion_tokens: number; total_tokens: number }
 }
 
+export interface ModelEntry {
+  provider: string
+  models: string[]
+  available: boolean
+}
+
+export interface ModelsResponse {
+  providers: ModelEntry[]
+}
+
 export const api = {
   // Gateway — AI inference + metadata
   health: () => gateway<HealthResponse>('/v1/health'),
+  models: () => gateway<ModelsResponse>('/v1/models'),
   chat: (req: ChatRequest) =>
     gateway<ChatResponse>('/v1/chat/completions', { method: 'POST', body: JSON.stringify(req) }),
+
+  // Streaming chat — returns async generator of text chunks
+  async *chatStream(req: ChatRequest): AsyncGenerator<string> {
+    const res = await fetch(`${GATEWAY_URL}/v1/chat/stream`, {
+      method: 'POST',
+      headers: { ...gatewayHeaders(), 'Content-Type': 'application/json' },
+      body: JSON.stringify(req),
+    })
+    if (!res.ok || !res.body) throw new Error(`Stream error: ${res.status}`)
+
+    const reader = res.body.getReader()
+    const decoder = new TextDecoder()
+    let buf = ''
+
+    while (true) {
+      const { done, value } = await reader.read()
+      if (done) break
+      buf += decoder.decode(value, { stream: true })
+      const lines = buf.split('\n')
+      buf = lines.pop() ?? ''
+      for (const line of lines) {
+        if (line.startsWith('data: ')) {
+          const raw = line.slice(6).trim()
+          if (raw === '[DONE]') return
+          try {
+            const ev = JSON.parse(raw) as { content?: string; done?: boolean }
+            if (ev.content) yield ev.content
+          } catch { /* skip malformed */ }
+        }
+      }
+    }
+  },
 
   // Agents registry — live agent list (no auth, read-only)
   agents: () => registryFetch<{ agents: Agent[]; count: number }>('/agents'),
