@@ -60,6 +60,7 @@ export interface ChatRequest {
   messages: Array<{ role: 'system' | 'user' | 'assistant'; content: string }>
   temperature?: number
   max_tokens?: number
+  conversation_id?: string
 }
 
 export interface ChatResponse {
@@ -78,6 +79,26 @@ export interface ModelEntry {
 
 export interface ModelsResponse {
   providers: ModelEntry[]
+}
+
+export interface Conversation {
+  id: string
+  title: string
+  model: string
+  created_at: number
+  updated_at: number
+}
+
+export interface ConversationMessage {
+  id: string
+  conversation_id: string
+  role: 'user' | 'assistant' | 'system'
+  content: string
+  created_at: number
+}
+
+export interface ConversationWithMessages extends Conversation {
+  messages: ConversationMessage[]
 }
 
 export const api = {
@@ -133,4 +154,12 @@ export const api = {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(task),
     }),
+
+  // Conversation persistence
+  conversations: () => gateway<{ conversations: Conversation[] }>('/v1/conversations'),
+  getConversation: (id: string) => gateway<ConversationWithMessages>(`/v1/conversations/${id}`),
+  createConversation: (title: string, model?: string) =>
+    gateway<Conversation>('/v1/conversations', { method: 'POST', body: JSON.stringify({ title, model }) }),
+  deleteConversation: (id: string) =>
+    gateway<{ deleted: boolean }>(`/v1/conversations/${id}`, { method: 'DELETE' }),
 }
