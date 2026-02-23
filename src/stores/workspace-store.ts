@@ -10,6 +10,7 @@ interface Workspace {
 interface WorkspaceState {
   workspaces: Workspace[]
   activeWorkspace: Workspace | null
+  currentWorkspace: Workspace | null  // alias for activeWorkspace
   isLoading: boolean
   fetchWorkspaces: () => Promise<void>
   setActiveWorkspace: (workspace: Workspace) => void
@@ -18,11 +19,13 @@ interface WorkspaceState {
 export const useWorkspaceStore = create<WorkspaceState>((set) => ({
   workspaces: [],
   activeWorkspace: null,
+  currentWorkspace: null,
   isLoading: false,
   fetchWorkspaces: async () => {
     set({ isLoading: true })
     // TODO: fetch from blackroad-agents registry API
     set({ workspaces: [], isLoading: false })
   },
-  setActiveWorkspace: (workspace) => set({ activeWorkspace: workspace }),
+  setActiveWorkspace: (workspace) =>
+    set({ activeWorkspace: workspace, currentWorkspace: workspace }),
 }))
