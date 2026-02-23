@@ -10,7 +10,8 @@ import {
   Plus,
   LogOut,
   LayoutDashboard,
-  Activity
+  Activity,
+  CheckSquare,
 } from 'lucide-react';
 import { useAuthStore } from '@/stores/auth-store';
 import { useWorkspaceStore } from '@/stores/workspace-store';
@@ -36,6 +37,11 @@ export default function Sidebar() {
       name: 'Agents',
       href: '/agents',
       icon: Bot,
+    },
+    {
+      name: 'Tasks',
+      href: '/tasks',
+      icon: CheckSquare,
     },
     {
       name: 'Monitoring',
