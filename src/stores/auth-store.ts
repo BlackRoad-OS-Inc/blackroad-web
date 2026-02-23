@@ -13,6 +13,7 @@ interface AuthState {
   user: User | null
   token: string | null
   login: (email: string, password: string) => Promise<void>
+  signup: (email: string, password: string, name: string) => Promise<void>
   logout: () => void
 }
 
@@ -25,6 +26,12 @@ export const useAuthStore = create<AuthState>()(
       login: async (email: string, _password: string) => {
         // TODO: replace with real auth call to gateway
         const user: User = { id: email, email, name: email.split('@')[0] }
+        const token = `br-${Date.now()}`
+        set({ isAuthenticated: true, user, token })
+      },
+      signup: async (email: string, _password: string, name: string) => {
+        // TODO: replace with real account creation via gateway
+        const user: User = { id: email, email, name }
         const token = `br-${Date.now()}`
         set({ isAuthenticated: true, user, token })
       },
