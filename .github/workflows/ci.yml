@@ -9,7 +9,7 @@ on:
 jobs:
   lint-test:
     name: Lint & Test
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, arm64, blackroad]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -23,7 +23,7 @@ jobs:
 
   e2e:
     name: E2E Playwright Tests
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, arm64, blackroad]
     needs: lint-test
     steps:
       - uses: actions/checkout@v4
