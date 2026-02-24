@@ -9,7 +9,6 @@ on:
 
 jobs:
   notice:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, blackroad-fleet]
     steps:
       - run: echo "blackroad-web is a static Cloudflare Pages site. Use deploy.yml for Cloudflare Pages deploy."
-
