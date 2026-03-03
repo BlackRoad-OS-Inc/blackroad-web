@@ -22,7 +22,7 @@ export default function LoginPage() {
 
     try {
       await login(email, password);
-      router.push('/workspace');
+      router.push('/os/workspace');
     } catch {
       setError('Invalid email or password');
     } finally {
@@ -192,7 +192,7 @@ export default function LoginPage() {
 
             <p className="text-center text-sm text-gray-400">
               Don&apos;t have an account?{' '}
-              <Link href="/signup" className="font-medium text-hot-pink hover:text-hot-pink/80 transition-colors">
+              <Link href="/os/signup" className="font-medium text-hot-pink hover:text-hot-pink/80 transition-colors">
                 Sign up for free
               </Link>
             </p>

@@ -18,7 +18,7 @@ export default function AppLayout({
 
   useEffect(() => {
     if (!isAuthenticated) {
-      router.push('/login');
+      router.push('/os/login');
     } else {
       fetchWorkspaces();
     }
