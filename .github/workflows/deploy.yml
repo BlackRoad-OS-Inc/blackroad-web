@@ -36,4 +36,4 @@ jobs:
           projectName: blackroad-web
           directory: .vercel/output/static
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
-          wranglerVersion: '3'
+          wranglerVersion: '3.101.0'
