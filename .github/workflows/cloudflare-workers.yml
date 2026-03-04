@@ -42,9 +42,30 @@ jobs:
       - name: Type-check worker code
         run: npm run typecheck --if-present || echo '⚠ typecheck skipped'
       - name: Validate wrangler config
-        run: npx wrangler@3 deploy --dry-run --outdir /tmp/worker-dry-run
-        continue-on-error: true
+        run: |
+          set -euo pipefail
+          STATUS=0
 
+          # Validate each worker's wrangler.toml explicitly
+          shopt -s nullglob
+          WORKER_CONFIGS=(workers/*/wrangler.toml)
+
+          if [ ${#WORKER_CONFIGS[@]} -eq 0 ]; then
+            echo "ℹ No worker configs found under workers/*/wrangler.toml — skipping worker validation"
+            exit 0
+          fi
+
+          for CONFIG in "${WORKER_CONFIGS[@]}"; do
+            echo "🔍 Validating Cloudflare Worker config: ${CONFIG}"
+            if ! npx wrangler@3 deploy --dry-run --outdir /tmp/worker-dry-run --config "${CONFIG}"; then
+              echo "❌ Validation failed for ${CONFIG}"
+              STATUS=1
+            else
+              echo "✅ Validation succeeded for ${CONFIG}"
+            fi
+          done
+
+          exit "${STATUS}"
   # Deploy the Cloudflare Pages app (with edge-compatible Next.js)
   deploy-pages:
     name: Deploy Pages (Next.js Edge)
