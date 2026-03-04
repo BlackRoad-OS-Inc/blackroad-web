@@ -24,7 +24,7 @@ jobs:
           cache: npm
       - run: npm ci
       - name: Build with @cloudflare/next-on-pages
-        run: npx @cloudflare/next-on-pages@1
+        run: npx --yes @cloudflare/next-on-pages@1.13.0
         env:
           NEXT_PUBLIC_GATEWAY_URL: ${{ vars.NEXT_PUBLIC_GATEWAY_URL || 'https://gateway.blackroad.ai' }}
           NEXT_PUBLIC_AGENTS_API_URL: ${{ vars.NEXT_PUBLIC_AGENTS_API_URL || 'https://agents.blackroad.ai' }}
