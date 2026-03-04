@@ -41,18 +41,3 @@ jobs:
             --repo "${{ github.repository }}" \
             --subject "$PR_TITLE" \
             || echo "ℹ Automerge already enabled or PR not ready"
-
-  merge-queue-trigger:
-    name: Add to Merge Queue on CI pass
-    runs-on: ubuntu-latest
-    if: |
-      github.event_name == 'workflow_run' &&
-      github.event.workflow_run.conclusion == 'success'
-    steps:
-      - name: Check and trigger automerge for eligible PRs
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          echo "CI passed for run: ${{ github.event.workflow_run.id }}"
-          echo "Head branch: ${{ github.event.workflow_run.head_branch }}"
-          echo "Automerge is enabled on PRs with 'automerge' label or copilot/ branches"
