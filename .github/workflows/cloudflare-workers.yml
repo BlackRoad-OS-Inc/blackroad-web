@@ -12,12 +12,6 @@ on:
       - 'workers/**'
       - 'wrangler*.toml'
   workflow_dispatch:
-    inputs:
-      worker:
-        description: 'Which worker to deploy (all or specific name)'
-        required: false
-        default: 'all'
-        type: string
 
 permissions:
   contents: read
