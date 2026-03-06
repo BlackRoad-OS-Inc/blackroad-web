@@ -1,0 +1,28 @@
+# Copyright (c) 2025-2026 BlackRoad OS, Inc. All Rights Reserved.
+name: Automerge
+
+on:
+  pull_request:
+    types: [labeled, synchronize, opened, reopened]
+  check_suite:
+    types: [completed]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  automerge:
+    runs-on: ubuntu-latest
+    if: >
+      github.event.pull_request.labels && (
+        contains(github.event.pull_request.labels.*.name, 'automerge') ||
+        startsWith(github.event.pull_request.head.ref, 'copilot/')
+      )
+    steps:
+      - uses: actions/checkout@v4
+      - name: Auto-merge PR
+        run: gh pr merge --squash --auto "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

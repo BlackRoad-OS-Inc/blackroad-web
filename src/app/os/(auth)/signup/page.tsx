@@ -29,7 +29,7 @@ export default function SignupPage() {
 
     try {
       await signup(email, password, name);
-      router.push('/workspace');
+      router.push('/os/workspace');
     } catch {
       setError('Failed to create account. Please try again.');
     } finally {
@@ -242,7 +242,7 @@ export default function SignupPage() {
 
             <p className="text-center text-sm text-gray-400">
               Already have an account?{' '}
-              <Link href="/login" className="font-medium text-hot-pink hover:text-hot-pink/80 transition-colors">
+              <Link href="/os/login" className="font-medium text-hot-pink hover:text-hot-pink/80 transition-colors">
                 Sign in
               </Link>
             </p>

@@ -1,8 +1,9 @@
+# Copyright (c) 2025-2026 BlackRoad OS, Inc. All Rights Reserved.
 name: Google Drive Backup
 
 on:
   schedule:
-    - cron: '0 3 * * *'  # Daily 3 AM
+    - cron: '0 3 * * *'
   workflow_dispatch:
     inputs:
       backup_type:
@@ -12,9 +13,12 @@ on:
         type: choice
         options: [full, code-only, docs-only]
 
+permissions:
+  contents: read
+
 jobs:
   backup-to-drive:
-    runs-on: [self-hosted, blackroad-fleet]
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
@@ -55,8 +59,7 @@ jobs:
           folder_id = os.environ.get("GDRIVE_FOLDER_ID", "")
 
           if not sa_json or not folder_id:
-              print("⚠ GOOGLE_SERVICE_ACCOUNT_JSON or GDRIVE_FOLDER_ID not set")
-              print("Add these GitHub secrets to enable Google Drive backup")
+              print("GOOGLE_SERVICE_ACCOUNT_JSON or GDRIVE_FOLDER_ID not set")
               sys.exit(0)
 
           creds_data = json.loads(sa_json)
@@ -69,26 +72,22 @@ jobs:
           backup_file = os.environ["BACKUP_FILE"]
           backup_name = os.environ["BACKUP_NAME"]
 
-          file_metadata = {
-              "name": backup_name,
-              "parents": [folder_id]
-          }
+          file_metadata = {"name": backup_name, "parents": [folder_id]}
           media = MediaFileUpload(backup_file, mimetype="application/gzip")
           file = service.files().create(body=file_metadata, media_body=media, fields="id").execute()
-          print(f"✓ Uploaded: {backup_name} (ID: {file['id']})")
+          print(f"Uploaded: {backup_name} (ID: {file['id']})")
 
-          # Clean up backups older than 30 days
           query = f"'{folder_id}' in parents and name contains 'backup-' and trashed=false"
           results = service.files().list(q=query, fields="files(id,name,createdTime)", orderBy="createdTime").execute()
           files = results.get("files", [])
           if len(files) > 30:
               for old_file in files[:-30]:
                   service.files().delete(fileId=old_file["id"]).execute()
-                  print(f"🗑 Deleted old backup: {old_file['name']}")
+                  print(f"Deleted old backup: {old_file['name']}")
           PYEOF
 
   backup-summary:
-    runs-on: [self-hosted, blackroad-fleet]
+    runs-on: ubuntu-latest
     needs: backup-to-drive
     if: always()
     steps:
@@ -98,8 +97,3 @@ jobs:
           echo "- Repo: ${{ github.repository }}" >> $GITHUB_STEP_SUMMARY
           echo "- Time: $(date -u)" >> $GITHUB_STEP_SUMMARY
           echo "- Status: ${{ needs.backup-to-drive.result }}" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**To enable Google Drive backup:**" >> $GITHUB_STEP_SUMMARY
-          echo "1. Create a Google Service Account" >> $GITHUB_STEP_SUMMARY
-          echo "2. Add \`GOOGLE_SERVICE_ACCOUNT_JSON\` org secret" >> $GITHUB_STEP_SUMMARY
-          echo "3. Add \`GDRIVE_FOLDER_ID\` org secret" >> $GITHUB_STEP_SUMMARY

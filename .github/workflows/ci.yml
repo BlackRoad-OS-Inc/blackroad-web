@@ -1,3 +1,4 @@
+# Copyright (c) 2025-2026 BlackRoad OS, Inc. All Rights Reserved.
 name: CI
 
 on:
@@ -7,10 +8,13 @@ on:
     branches: [main]
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   lint-test:
     name: Lint & Test
-    runs-on: [self-hosted, linux, arm64, blackroad]
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -18,8 +22,9 @@ jobs:
           node-version: '22'
           cache: 'npm'
       - run: npm ci
-      - run: npm run lint --if-present || echo '⚠ lint skipped'
+      - run: npm run lint --if-present || echo 'lint skipped'
       - run: npm test --if-present
+      - run: npm run typecheck --if-present
       - run: npm run build
         env:
           NEXT_PUBLIC_GATEWAY_URL: 'http://localhost:18787'
@@ -27,7 +32,7 @@ jobs:
 
   e2e:
     name: E2E Playwright Tests
-    runs-on: [self-hosted, linux, arm64, blackroad]
+    runs-on: ubuntu-latest
     needs: lint-test
     steps:
       - uses: actions/checkout@v4
@@ -37,7 +42,7 @@ jobs:
           cache: 'npm'
       - run: npm ci
       - name: Install Playwright browsers
-        run: npx playwright install chromium
+        run: npx playwright install chromium --with-deps
       - name: Build Next.js app
         run: npm run build
         env:

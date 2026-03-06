@@ -1,3 +1,4 @@
+# Copyright (c) 2025-2026 BlackRoad OS, Inc. All Rights Reserved.
 name: Notion Docs Sync
 
 on:
@@ -8,12 +9,15 @@ on:
       - '*.md'
       - 'CHANGELOG.md'
   schedule:
-    - cron: '0 6 * * 1'  # Monday 6 AM
+    - cron: '0 6 * * 1'
   workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   sync-to-notion:
-    runs-on: [self-hosted, blackroad-fleet]
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
@@ -40,16 +44,15 @@ jobs:
           db_id = os.environ.get("NOTION_DATABASE_ID", "")
 
           if not db_id:
-              print("⚠ NOTION_DATABASE_ID not set — skipping")
+              print("NOTION_DATABASE_ID not set — skipping")
               exit(0)
 
           def sync_file(filepath):
               with open(filepath) as f:
                   post = frontmatter.load(f)
               title = post.get("title", os.path.basename(filepath).replace(".md", ""))
-              content = post.content[:2000]  # Notion block limit
+              content = post.content[:2000]
 
-              # Check if page exists
               results = notion.databases.query(
                   database_id=db_id,
                   filter={"property": "Name", "title": {"equals": title}}
@@ -71,20 +74,20 @@ jobs:
 
               if results["results"]:
                   notion.pages.update(page_id=results["results"][0]["id"], properties=page_data["properties"])
-                  print(f"✓ Updated: {title}")
+                  print(f"Updated: {title}")
               else:
                   notion.pages.create(**page_data)
-                  print(f"✓ Created: {title}")
+                  print(f"Created: {title}")
 
           for md_file in glob.glob("docs/**/*.md", recursive=True) + glob.glob("*.md"):
               try:
                   sync_file(md_file)
               except Exception as e:
-                  print(f"⚠ {md_file}: {e}")
+                  print(f"{md_file}: {e}")
           PYEOF
 
   sync-changelog:
-    runs-on: [self-hosted, blackroad-fleet]
+    runs-on: ubuntu-latest
     if: github.event_name == 'push'
     steps:
       - uses: actions/checkout@v4

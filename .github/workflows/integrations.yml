@@ -1,3 +1,4 @@
+# Copyright (c) 2025-2026 BlackRoad OS, Inc. All Rights Reserved.
 name: Third-Party Integrations
 
 on:
@@ -12,9 +13,12 @@ on:
         type: choice
         options: [all, huggingface, notion, slack, linear, sentry]
 
+permissions:
+  contents: read
+
 jobs:
   notify-slack:
-    runs-on: [self-hosted, blackroad-fleet]
+    runs-on: ubuntu-latest
     if: github.event_name == 'release' || inputs.service == 'all' || inputs.service == 'slack'
     steps:
       - name: Notify Slack on release
@@ -22,13 +26,13 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: |
           if [ -z "$SLACK_WEBHOOK_URL" ]; then
-            echo "⚠ SLACK_WEBHOOK_URL not set — skipping Slack notification"
+            echo "SLACK_WEBHOOK_URL not set — skipping Slack notification"
             exit 0
           fi
           curl -s -X POST "$SLACK_WEBHOOK_URL" \
             -H 'Content-type: application/json' \
             -d "{
-              \"text\": \"🚀 *${{ github.repository }}* released \`${{ github.ref_name }}\`\",
+              \"text\": \"*${{ github.repository }}* released \`${{ github.ref_name }}\`\",
               \"attachments\": [{
                 \"color\": \"#FF1D6C\",
                 \"fields\": [
@@ -38,10 +42,9 @@ jobs:
                 ]
               }]
             }"
-          echo "✓ Slack notified"
 
   create-linear-release:
-    runs-on: [self-hosted, blackroad-fleet]
+    runs-on: ubuntu-latest
     if: github.event_name == 'release' || inputs.service == 'linear'
     steps:
       - name: Create Linear release milestone
@@ -50,17 +53,16 @@ jobs:
           LINEAR_TEAM_ID: ${{ secrets.LINEAR_TEAM_ID }}
         run: |
           if [ -z "$LINEAR_API_KEY" ] || [ -z "$LINEAR_TEAM_ID" ]; then
-            echo "⚠ LINEAR_API_KEY or LINEAR_TEAM_ID not set"
+            echo "LINEAR_API_KEY or LINEAR_TEAM_ID not set"
             exit 0
           fi
           curl -s -X POST "https://api.linear.app/graphql" \
             -H "Authorization: $LINEAR_API_KEY" \
             -H "Content-Type: application/json" \
-            -d "{\"query\": \"mutation { milestoneCreate(input: { name: \\\"${{ github.ref_name }}\\\", teamId: \\\"$LINEAR_TEAM_ID\\\" }) { milestone { id name } } }\"}" \
-            | python3 -c "import sys,json; d=json.load(sys.stdin); print('✓ Linear milestone:', d.get('data',{}).get('milestoneCreate',{}).get('milestone',{}).get('name','?'))"
+            -d "{\"query\": \"mutation { milestoneCreate(input: { name: \\\"${{ github.ref_name }}\\\", teamId: \\\"$LINEAR_TEAM_ID\\\" }) { milestone { id name } } }\"}"
 
   update-sentry-release:
-    runs-on: [self-hosted, blackroad-fleet]
+    runs-on: ubuntu-latest
     if: github.event_name == 'release' || inputs.service == 'sentry'
     steps:
       - uses: actions/checkout@v4

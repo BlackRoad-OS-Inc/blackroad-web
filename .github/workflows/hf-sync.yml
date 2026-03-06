@@ -1,3 +1,4 @@
+# Copyright (c) 2025-2026 BlackRoad OS, Inc. All Rights Reserved.
 name: HuggingFace Model Sync
 
 on:
@@ -7,7 +8,7 @@ on:
       - 'models/**'
       - 'configs/hf-*.json'
   schedule:
-    - cron: '0 2 * * 0'  # Weekly Sunday 2 AM
+    - cron: '0 2 * * 0'
   workflow_dispatch:
     inputs:
       model_id:
@@ -15,9 +16,12 @@ on:
         required: false
         default: 'blackroad-os/blackroad-agents'
 
+permissions:
+  contents: read
+
 jobs:
   sync-to-hub:
-    runs-on: [self-hosted, blackroad-fleet]
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
@@ -45,24 +49,21 @@ jobs:
           from huggingface_hub import HfApi, create_repo
           api = HfApi(token=os.environ["HF_TOKEN"])
           model_id = os.environ["MODEL_ID"]
-          
-          # Create or update repo
+
           try:
               create_repo(model_id, repo_type="model", exist_ok=True, token=os.environ["HF_TOKEN"])
-              print(f"✓ Repo ready: {model_id}")
+              print(f"Repo ready: {model_id}")
           except Exception as e:
               print(f"Note: {e}")
-          
-          # Upload model files if present
+
           if os.path.exists("models"):
               api.upload_folder(
                   folder_path="models",
                   repo_id=model_id,
                   repo_type="model",
               )
-              print(f"✓ Models uploaded to {model_id}")
-          
-          # Sync README
+              print(f"Models uploaded to {model_id}")
+
           if os.path.exists("README.md"):
               api.upload_file(
                   path_or_fileobj="README.md",
@@ -70,11 +71,11 @@ jobs:
                   repo_id=model_id,
                   repo_type="model",
               )
-              print(f"✓ README synced")
+              print("README synced")
           PYEOF
 
   create-space:
-    runs-on: [self-hosted, blackroad-fleet]
+    runs-on: ubuntu-latest
     if: github.event_name == 'workflow_dispatch'
     steps:
       - uses: actions/checkout@v4
@@ -97,10 +98,10 @@ jobs:
           from huggingface_hub import HfApi, create_repo, SpaceStage
           api = HfApi(token=os.environ["HF_TOKEN"])
           space_id = f"blackroad-os/{os.environ.get('ORG_NAME', 'blackroad')}-demo"
-          
+
           try:
               create_repo(space_id, repo_type="space", space_sdk="gradio", exist_ok=True, token=os.environ["HF_TOKEN"])
-              print(f"✓ Space ready: https://huggingface.co/spaces/{space_id}")
+              print(f"Space ready: https://huggingface.co/spaces/{space_id}")
           except Exception as e:
               print(f"Space: {e}")
           PYEOF

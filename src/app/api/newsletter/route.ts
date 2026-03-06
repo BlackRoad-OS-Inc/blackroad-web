@@ -1,23 +1,27 @@
+// Copyright (c) 2025-2026 BlackRoad OS, Inc. All Rights Reserved.
 import { NextResponse } from 'next/server'
 
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
 export async function POST(request: Request) {
-  const { email } = await request.json()
-  
-  // Validate email
-  if (!email || !email.includes('@')) {
+  let body: unknown
+  try {
+    body = await request.json()
+  } catch {
+    return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 })
+  }
+
+  const email = (body as Record<string, unknown>)?.email
+  if (!email || typeof email !== 'string' || !EMAIL_REGEX.test(email)) {
     return NextResponse.json(
       { error: 'Invalid email address' },
-      { status: 400 }
+      { status: 400 },
     )
   }
-  
-  // In production, send to email service (Mailchimp, SendGrid, etc.)
-  console.log('📧 Newsletter Signup:', email)
-  
+
   return NextResponse.json({
     status: 'subscribed',
-    email,
-    message: 'Successfully subscribed to newsletter!'
+    message: 'Successfully subscribed to newsletter!',
   })
 }
 
