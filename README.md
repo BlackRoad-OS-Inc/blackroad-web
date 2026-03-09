@@ -2,7 +2,11 @@
 
 > Frontend interface and web platform for BlackRoad OS.
 
+<!-- Workflow status badges (reflect current GitHub Actions status) -->
 [![CI](https://github.com/BlackRoad-OS-Inc/blackroad-web/actions/workflows/ci.yml/badge.svg)](https://github.com/BlackRoad-OS-Inc/blackroad-web/actions/workflows/ci.yml)
+[![Deploy](https://github.com/BlackRoad-OS-Inc/blackroad-web/actions/workflows/deploy.yml/badge.svg)](https://github.com/BlackRoad-OS-Inc/blackroad-web/actions/workflows/deploy.yml)
+[![Deploy Cloudflare Workers](https://github.com/BlackRoad-OS-Inc/blackroad-web/actions/workflows/cloudflare-workers.yml/badge.svg)](https://github.com/BlackRoad-OS-Inc/blackroad-web/actions/workflows/cloudflare-workers.yml)
+[![Automerge](https://github.com/BlackRoad-OS-Inc/blackroad-web/actions/workflows/automerge.yml/badge.svg)](https://github.com/BlackRoad-OS-Inc/blackroad-web/actions/workflows/automerge.yml)
 
 ## Overview
 

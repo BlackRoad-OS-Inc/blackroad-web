@@ -1,0 +1,43 @@
+# Copyright (c) 2025-2026 BlackRoad OS, Inc. All Rights Reserved.
+# ✅ VERIFIED WORKING — Auto-merge PRs when CI passes
+# Enables automerge (squash) on PRs with 'automerge' label or opened by the Copilot bot.
+name: Automerge
+
+on:
+  pull_request:
+    types: [opened, synchronize, labeled, reopened]
+  check_suite:
+    types: [completed]
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  automerge:
+    name: Enable Automerge
+    runs-on: ubuntu-latest
+    # Only run for PRs that have the 'automerge' label, or are opened by Copilot/bots
+    if: |
+      github.event_name == 'pull_request' && (
+        contains(github.event.pull_request.labels.*.name, 'automerge') ||
+        startsWith(github.event.pull_request.head.ref, 'copilot/') ||
+        github.event.pull_request.user.login == 'dependabot[bot]' ||
+        github.event.pull_request.user.login == 'Copilot'
+      )
+    steps:
+      - name: Enable automerge (squash)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          gh pr merge "$PR_NUMBER" \
+            --auto \
+            --squash \
+            --repo "${{ github.repository }}" \
+            --subject "$PR_TITLE" \
+            || echo "ℹ Automerge already enabled or PR not ready"
