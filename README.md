@@ -1,44 +1,64 @@
-# @blackroad/web
+# blackroad-web
 
-Next.js 15 dashboard for BlackRoad OS. Displays agents, metrics, and system status.
+> Frontend interface and web platform for BlackRoad OS.
+
+<!-- Workflow status badges (reflect current GitHub Actions status) -->
+[![CI](https://github.com/BlackRoad-OS-Inc/blackroad-web/actions/workflows/ci.yml/badge.svg)](https://github.com/BlackRoad-OS-Inc/blackroad-web/actions/workflows/ci.yml)
+[![Deploy](https://github.com/BlackRoad-OS-Inc/blackroad-web/actions/workflows/deploy.yml/badge.svg)](https://github.com/BlackRoad-OS-Inc/blackroad-web/actions/workflows/deploy.yml)
+[![Deploy Cloudflare Workers](https://github.com/BlackRoad-OS-Inc/blackroad-web/actions/workflows/cloudflare-workers.yml/badge.svg)](https://github.com/BlackRoad-OS-Inc/blackroad-web/actions/workflows/cloudflare-workers.yml)
+[![Automerge](https://github.com/BlackRoad-OS-Inc/blackroad-web/actions/workflows/automerge.yml/badge.svg)](https://github.com/BlackRoad-OS-Inc/blackroad-web/actions/workflows/automerge.yml)
+
+## Overview
+
+Next.js 16 + React 19 web platform. The primary user interface for BlackRoad OS.
+
+## Structure
+
+```
+blackroad-web/
+├── src/
+│   ├── app/          # Next.js App Router pages & layouts
+│   ├── components/   # Reusable React components
+│   ├── hooks/        # Custom React hooks
+│   ├── lib/          # Utilities and helpers
+│   └── stores/       # Zustand state stores
+├── styles/           # Global CSS / Tailwind
+├── public/           # Static assets
+├── test/             # Test suite (Vitest)
+├── next.config.ts    # Next.js configuration
+└── wrangler.toml     # Cloudflare Pages deployment
+```
 
 ## Quick Start
 
 ```bash
 npm install
-npm run dev       # http://localhost:3000
+npm run dev        # Dev server at http://localhost:3000
+npm run build      # Production build
+npm run lint       # ESLint
+npm test           # Vitest tests
 ```
 
-## Development
+## Environment Variables
+
+Copy `.env.example` to `.env.local` and fill in:
 
 ```bash
-npm run typecheck  # Type-check
-npm test           # Run tests
-npm run build      # Production build
-npm run format     # Prettier
+cp .env.example .env.local
 ```
 
-## Structure
+## Deployment
 
-```
-src/
-  app/              # Next.js App Router pages
-  components/
-    ui/             # Button, Card, Badge
-    layout/         # Header, Sidebar
-    agents/         # Agent cards and grid
-    metrics/        # Metric displays
-  lib/              # API client, utilities, brand constants
-  hooks/            # useAgents, useMetrics, useWebSocket
-  stores/           # Zustand (agent-store, ui-store)
-test/               # Vitest test suites
+Deployed to Cloudflare Pages via `wrangler.toml`.
+
+```bash
+wrangler pages deploy .next --project-name=blackroad-web
 ```
 
-## Brand System
+## Contributing
 
-- Hot Pink `#FF1D6C`, Amber `#F5A623`, Violet `#9C27B0`, Electric Blue `#2979FF`
-- Golden Ratio spacing: 8, 13, 21, 34, 55, 89, 144px
+See [CONTRIBUTING.md](CONTRIBUTING.md)
 
-## License
+---
 
-Copyright (c) 2025-2026 BlackRoad OS, Inc. All Rights Reserved.
+© BlackRoad OS, Inc. — All rights reserved. Proprietary.

@@ -137,3 +137,15 @@ dist
 # Vite logs files
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# Misplaced directories (moved to appropriate repos)
+blackroad-sf/
+roadcoin/
+apps/
+
+# Loose static files
+/index.html
+
+# Playwright
+/playwright-report/
+/test-results/
