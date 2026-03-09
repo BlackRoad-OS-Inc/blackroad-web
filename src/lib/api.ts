@@ -1,165 +1,67 @@
-// Copyright (c) 2025-2026 BlackRoad OS, Inc. All Rights Reserved.
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://api.blackroad.io';
 
-const GATEWAY_URL = (process.env['NEXT_PUBLIC_GATEWAY_URL'] ?? 'http://127.0.0.1:8787').replace(/\/$/, '')
-const AGENTS_URL = (process.env['NEXT_PUBLIC_AGENTS_API_URL'] ?? 'http://127.0.0.1:3001').replace(/\/$/, '')
-const GATEWAY_TOKEN = process.env['NEXT_PUBLIC_GATEWAY_TOKEN'] ?? 'dashboard-readonly'
-
-function gatewayHeaders(): HeadersInit {
-  return {
-    'Content-Type': 'application/json',
-    Authorization: `Bearer ${GATEWAY_TOKEN}`,
-  }
+interface ApiOptions {
+  method?: string;
+  body?: unknown;
+  headers?: Record<string, string>;
+  token?: string;
 }
 
-export async function gateway<T>(path: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(`${GATEWAY_URL}${path}`, {
-    ...init,
-    headers: { ...gatewayHeaders(), ...(init?.headers ?? {}) },
-  })
-  if (!res.ok) {
-    throw new Error(`Gateway error: ${res.status} ${res.statusText}`)
-  }
-  return res.json() as Promise<T>
-}
+class ApiClient {
+  private baseUrl: string;
+  private token: string | null = null;
 
-async function registryFetch<T>(path: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(`${AGENTS_URL}${path}`, init)
-  if (!res.ok) {
-    throw new Error(`Registry error: ${res.status} ${res.statusText}`)
-  }
-  return res.json() as Promise<T>
-}
+  constructor(baseUrl: string) { this.baseUrl = baseUrl; }
+  setToken(token: string) { this.token = token; }
+  clearToken() { this.token = null; }
 
-export interface Agent {
-  name: string
-  title: string
-  role: string
-  description: string
-  color?: string
-  capabilities: string[]
-  providers?: string[]
-  status?: 'available' | 'busy' | 'unavailable'
-}
-
-export interface HealthResponse {
-  status: string
-  version: string
-  uptime: number
-}
-
-export interface RegistryHealth {
-  status: string
-  service: string
-  version: string
-  uptime: number
-  agentCount: number
-}
-
-export interface ChatRequest {
-  model: string
-  messages: Array<{ role: 'system' | 'user' | 'assistant'; content: string }>
-  temperature?: number
-  max_tokens?: number
-  conversation_id?: string
-}
-
-export interface ChatResponse {
-  id: string
-  content: string
-  model: string
-  provider: string
-  usage?: { prompt_tokens: number; completion_tokens: number; total_tokens: number }
-}
-
-export interface ModelEntry {
-  provider: string
-  models: string[]
-  available: boolean
-}
-
-export interface ModelsResponse {
-  providers: ModelEntry[]
-}
-
-export interface Conversation {
-  id: string
-  title: string
-  model: string
-  created_at: number
-  updated_at: number
-}
-
-export interface ConversationMessage {
-  id: string
-  conversation_id: string
-  role: 'user' | 'assistant' | 'system'
-  content: string
-  created_at: number
-}
-
-export interface ConversationWithMessages extends Conversation {
-  messages: ConversationMessage[]
-}
-
-export const api = {
-  // Gateway — AI inference + metadata
-  health: () => gateway<HealthResponse>('/v1/health'),
-  models: () => gateway<ModelsResponse>('/v1/models'),
-  chat: (req: ChatRequest) =>
-    gateway<ChatResponse>('/v1/chat/completions', { method: 'POST', body: JSON.stringify(req) }),
-
-  // Streaming chat — returns async generator of text chunks
-  async *chatStream(req: ChatRequest): AsyncGenerator<string> {
-    const res = await fetch(`${GATEWAY_URL}/v1/chat/stream`, {
-      method: 'POST',
-      headers: { ...gatewayHeaders(), 'Content-Type': 'application/json' },
-      body: JSON.stringify(req),
-    })
-    if (!res.ok || !res.body) throw new Error(`Stream error: ${res.status}`)
-
-    const reader = res.body.getReader()
-    const decoder = new TextDecoder()
-    let buf = ''
-
-    while (true) {
-      const { done, value } = await reader.read()
-      if (done) break
-      buf += decoder.decode(value, { stream: true })
-      const lines = buf.split('\n')
-      buf = lines.pop() ?? ''
-      for (const line of lines) {
-        if (line.startsWith('data: ')) {
-          const raw = line.slice(6).trim()
-          if (raw === '[DONE]') return
-          try {
-            const ev = JSON.parse(raw) as { content?: string; done?: boolean }
-            if (ev.content) yield ev.content
-          } catch { /* skip malformed */ }
-        }
-      }
+  async request<T>(path: string, opts: ApiOptions = {}): Promise<T> {
+    const { method = 'GET', body, headers = {}, token } = opts;
+    const authToken = token || this.token;
+    const res = await fetch(`${this.baseUrl}${path}`, {
+      method,
+      headers: {
+        'Content-Type': 'application/json',
+        ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
+        ...headers,
+      },
+      body: body ? JSON.stringify(body) : undefined,
+    });
+    if (!res.ok) {
+      const error = await res.json().catch(() => ({ error: res.statusText }));
+      throw new ApiError(res.status, error.error || res.statusText);
     }
-  },
+    return res.json();
+  }
 
-  // Agents registry — live agent list (no auth, read-only)
-  agents: () => registryFetch<{ agents: Agent[]; count: number }>('/agents'),
-  agent: (name: string) => registryFetch<Agent>(`/agents/${name}`),
-  registryHealth: () => registryFetch<RegistryHealth>('/health'),
-
-  // Task marketplace
-  tasks: (status?: string) =>
-    registryFetch<{ tasks: unknown[]; count: number }>(`/tasks${status ? `?status=${status}` : ''}`),
-  createTask: (task: { title: string; description?: string; priority?: string; tags?: string[]; requiredCapabilities?: string[] }) =>
-    registryFetch<{ task: unknown }>('/tasks', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(task),
-    }),
-
-  // Conversation persistence
-  conversations: () => gateway<{ conversations: Conversation[] }>('/v1/conversations'),
-  getConversation: (id: string) => gateway<ConversationWithMessages>(`/v1/conversations/${id}`),
-  createConversation: (title: string, model?: string) =>
-    gateway<Conversation>('/v1/conversations', { method: 'POST', body: JSON.stringify({ title, model }) }),
-  deleteConversation: (id: string) =>
-    gateway<{ deleted: boolean }>(`/v1/conversations/${id}`, { method: 'DELETE' }),
+  async getAgents() { return this.request<Agent[]>('/agents'); }
+  async getAgent(id: string) { return this.request<Agent>(`/agents/${id}`); }
+  async submitTask(agentId: string, task: TaskInput) {
+    return this.request<TaskResult>(`/agents/${agentId}/tasks`, { method: 'POST', body: task });
+  }
+  async health() { return this.request<HealthStatus>('/health'); }
+  async ready() { return this.request<ReadyStatus>('/ready'); }
+  async login(credentials: { email: string; password: string }) {
+    return this.request<AuthResponse>('/auth/login', { method: 'POST', body: credentials });
+  }
+  async chat(provider: string, messages: ChatMessage[]) {
+    return this.request<ChatResponse>(`/v1/${provider}/chat`, { method: 'POST', body: { messages } });
+  }
 }
+
+class ApiError extends Error {
+  status: number;
+  constructor(status: number, message: string) { super(message); this.status = status; }
+}
+
+interface Agent { id: string; name: string; role: string; status: 'online' | 'offline' | 'busy'; capabilities: string[]; lastSeen: string; }
+interface TaskInput { type: string; payload: Record<string, unknown>; priority?: number; }
+interface TaskResult { id: string; status: 'queued' | 'running' | 'completed' | 'failed'; result?: unknown; }
+interface HealthStatus { status: string; version: string; uptime: number; timestamp: string; }
+interface ReadyStatus { status: string; providers: Record<string, string>; }
+interface AuthResponse { token: string; user: { id: string; email: string; role: string }; }
+interface ChatMessage { role: 'user' | 'assistant' | 'system'; content: string; }
+interface ChatResponse { message: ChatMessage; model: string; provider: string; }
+
+export const api = new ApiClient(API_BASE);
+export type { Agent, TaskInput, TaskResult, HealthStatus, AuthResponse, ChatMessage, ApiError };
