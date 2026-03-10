@@ -23,8 +23,9 @@ jobs:
           node-version: '22'
           cache: 'npm'
       - run: npm ci
-      - run: npm run lint --if-present || echo '⚠ lint skipped'
-      - run: npm test --if-present
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run lint --if-present || echo 'lint skipped'
       - name: Build Next.js app
         run: npm run build
         env:

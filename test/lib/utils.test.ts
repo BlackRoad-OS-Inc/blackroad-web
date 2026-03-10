@@ -1,6 +1,6 @@
 // Copyright (c) 2025-2026 BlackRoad OS, Inc. All Rights Reserved.
 import { describe, it, expect } from 'vitest'
-import { cn, formatNumber, capitalize } from '../../src/lib/utils'
+import { cn, formatDate, formatNumber, capitalize } from '../../src/lib/utils'
 
 describe('cn', () => {
   it('should join class names', () => {
@@ -23,6 +23,21 @@ describe('formatNumber', () => {
 
   it('should pass through small numbers', () => {
     expect(formatNumber(42)).toBe('42')
+  })
+})
+
+describe('formatDate', () => {
+  it('should format a Date object', () => {
+    const result = formatDate(new Date('2026-01-15T00:00:00'))
+    expect(result).toContain('Jan')
+    expect(result).toContain('15')
+    expect(result).toContain('2026')
+  })
+
+  it('should format a date string', () => {
+    const result = formatDate('2025-12-25')
+    expect(result).toContain('Dec')
+    expect(result).toContain('2025')
   })
 })
 
