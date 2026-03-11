@@ -1,11 +1,11 @@
 'use client'
 
-import { SignUp } from '@clerk/nextjs'
+import { SignIn } from '@clerk/nextjs'
 
-export default function SignUpPage() {
+export default function LoginPage() {
   return (
     <main className="min-h-screen bg-black text-white flex items-center justify-center px-6 py-16">
-      <SignUp
+      <SignIn
         appearance={{
           elements: {
             rootBox: "mx-auto",
@@ -13,7 +13,7 @@ export default function SignUpPage() {
           },
         }}
         fallbackRedirectUrl="/os"
-        signInUrl="/login"
+        signUpUrl="/signup"
       />
     </main>
   )

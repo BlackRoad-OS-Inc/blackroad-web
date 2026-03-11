@@ -15,12 +15,18 @@
     "test:e2e:ui": "playwright test --ui"
   },
   "dependencies": {
+    "@clerk/nextjs": "^7.0.2",
+    "@cloudflare/next-on-pages": "^1.13.16",
+    "@stripe/stripe-js": "^8.9.0",
     "clsx": "^2.1.1",
+    "framer-motion": "^12.35.2",
     "geist": "^1.7.0",
     "lucide-react": "^0.473.0",
     "next": "^15.1.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "recharts": "^3.8.0",
+    "stripe": "^20.4.1",
     "tailwind-merge": "^2.6.0",
     "zustand": "^5.0.3"
   },

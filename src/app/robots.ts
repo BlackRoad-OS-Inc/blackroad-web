@@ -11,6 +11,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/api/', '/dashboard', '/dashboard-2', '/account', '/settings-page', '/admin-panel', '/checkout'],
       },
     ],
-    sitemap: 'https://blackroad-os-web.pages.dev/sitemap.xml',
+    sitemap: 'https://blackroad.io/sitemap.xml',
   }
 }

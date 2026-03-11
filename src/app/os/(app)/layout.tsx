@@ -1,32 +1,41 @@
-'use client';
+'use client'
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { useAuthStore } from '@/stores/auth-store';
-import { useWorkspaceStore } from '@/stores/workspace-store';
-import Sidebar from '@/components/Sidebar';
-import AppHeader from '@/components/AppHeader';
+import { useUser } from '@clerk/nextjs'
+import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
+import Sidebar from '@/components/Sidebar'
+import AppHeader from '@/components/AppHeader'
 
-export default function AppLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const router = useRouter();
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-  const fetchWorkspaces = useWorkspaceStore((state) => state.fetchWorkspaces);
+export default function AppLayout({ children }: { children: React.ReactNode }) {
+  const { isLoaded, isSignedIn } = useUser()
+  const router = useRouter()
 
   useEffect(() => {
-    if (!isAuthenticated) {
-      router.push('/login');
-    } else {
-      fetchWorkspaces();
+    if (isLoaded && !isSignedIn) {
+      router.push('/signup')
     }
-  }, [isAuthenticated, router, fetchWorkspaces]);
+  }, [isLoaded, isSignedIn, router])
 
-  if (!isAuthenticated) {
-    return null;
+  if (!isLoaded) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-black">
+        <div className="flex gap-1">
+          {['#FF6B2B', '#FF2255', '#CC00AA', '#8844FF', '#4488FF', '#00D4FF'].map((c, i) => (
+            <div
+              key={c}
+              className="w-1 h-6 rounded-sm"
+              style={{
+                background: c,
+                animation: `barPulse 1.5s ease-in-out ${i * 0.1}s infinite`,
+              }}
+            />
+          ))}
+        </div>
+      </div>
+    )
   }
+
+  if (!isSignedIn) return null
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -38,5 +47,5 @@ export default function AppLayout({
         </main>
       </div>
     </div>
-  );
+  )
 }
