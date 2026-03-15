@@ -1,64 +1,41 @@
+<div align="center">
+
+<img src="https://images.blackroad.io/pixel-art/road-logo.png" alt="BlackRoad OS" width="80" />
+
 # blackroad-web
 
-> Frontend interface and web platform for BlackRoad OS.
+**Frontend interface and web platform for BlackRoad OS.**
 
-<!-- Workflow status badges (reflect current GitHub Actions status) -->
-[![CI](https://github.com/BlackRoad-OS-Inc/blackroad-web/actions/workflows/ci.yml/badge.svg)](https://github.com/BlackRoad-OS-Inc/blackroad-web/actions/workflows/ci.yml)
-[![Deploy](https://github.com/BlackRoad-OS-Inc/blackroad-web/actions/workflows/deploy.yml/badge.svg)](https://github.com/BlackRoad-OS-Inc/blackroad-web/actions/workflows/deploy.yml)
-[![Deploy Cloudflare Workers](https://github.com/BlackRoad-OS-Inc/blackroad-web/actions/workflows/cloudflare-workers.yml/badge.svg)](https://github.com/BlackRoad-OS-Inc/blackroad-web/actions/workflows/cloudflare-workers.yml)
-[![Automerge](https://github.com/BlackRoad-OS-Inc/blackroad-web/actions/workflows/automerge.yml/badge.svg)](https://github.com/BlackRoad-OS-Inc/blackroad-web/actions/workflows/automerge.yml)
+[![BlackRoad OS](https://img.shields.io/badge/BlackRoad_OS-Pave_Tomorrow-FF2255?style=for-the-badge&labelColor=000000)](https://blackroad.io)
+[![License](https://img.shields.io/badge/License-Proprietary-FF6B2B?style=for-the-badge&labelColor=000000)](./LICENSE)
+[![Edge AI](https://img.shields.io/badge/Edge_AI-52_TOPS-00D4FF?style=for-the-badge&labelColor=000000)](https://github.com/BlackRoad-OS-Inc)
 
-## Overview
+</div>
 
-Next.js 16 + React 19 web platform. The primary user interface for BlackRoad OS.
-
-## Structure
-
-```
-blackroad-web/
-├── src/
-│   ├── app/          # Next.js App Router pages & layouts
-│   ├── components/   # Reusable React components
-│   ├── hooks/        # Custom React hooks
-│   ├── lib/          # Utilities and helpers
-│   └── stores/       # Zustand state stores
-├── styles/           # Global CSS / Tailwind
-├── public/           # Static assets
-├── test/             # Test suite (Vitest)
-├── next.config.ts    # Next.js configuration
-└── wrangler.toml     # Cloudflare Pages deployment
-```
-
-## Quick Start
-
-```bash
-npm install
-npm run dev        # Dev server at http://localhost:3000
-npm run build      # Production build
-npm run lint       # ESLint
-npm test           # Vitest tests
-```
-
-## Environment Variables
-
-Copy `.env.example` to `.env.local` and fill in:
-
-```bash
-cp .env.example .env.local
-```
-
-## Deployment
-
-Deployed to Cloudflare Pages via `wrangler.toml`.
-
-```bash
-wrangler pages deploy .next --project-name=blackroad-web
-```
-
-## Contributing
-
-See [CONTRIBUTING.md](CONTRIBUTING.md)
+<div align="center">
+<sub>Part of the <a href="https://blackroad.io">BlackRoad OS</a> ecosystem — sovereign edge AI infrastructure</sub>
+</div>
 
 ---
 
-© BlackRoad OS, Inc. — All rights reserved. Proprietary.
+## Overview
+
+Frontend interface and web platform for BlackRoad OS.
+
+## License
+
+**Proprietary** — Copyright © 2024–2026 [BlackRoad OS, Inc.](https://blackroad.io) All rights reserved.
+
+Founder & CEO: **Alexa Louise Amundson** · Delaware C-Corp
+
+See [LICENSE](./LICENSE) for full terms.
+
+---
+
+<div align="center">
+
+**BlackRoad OS — Pave Tomorrow.**
+
+[blackroad.io](https://blackroad.io) · [GitHub](https://github.com/BlackRoad-OS-Inc) · [Brand](https://brand.blackroad.io)
+
+</div>
